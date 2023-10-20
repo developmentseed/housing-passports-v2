@@ -1,0 +1,11 @@
+version: '3'
+services:
+  data-scripts:
+    image: developmentseed/data-scripts:v1
+    build:
+      context: ./data-scripts/
+      dockerfile: Dockerfile
+    volumes:
+      - ./data-scripts:/mnt
+      - ~/.aws:/root/.aws
+    working_dir: /mnt

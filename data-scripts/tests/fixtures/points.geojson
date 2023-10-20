@@ -1,0 +1,41 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -83.22324872016907,
+                    42.35056784468503
+                ]
+            },
+            "properties": {
+                "captured_at": 1560113646235,
+                "compass_angle": 269.74,
+                "id": 477923969949510,
+                "is_pano": true,
+                "organization_id": 518073312556755,
+                "sequence_id": "EI7XcjTuDO2i-_tr611Tmw"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -83.22457373142242,
+                    42.350183286770374
+                ]
+            },
+            "properties": {
+                "captured_at": 1619555612361,
+                "compass_angle": 0.09,
+                "id": 475851890313265,
+                "is_pano": true,
+                "organization_id": 518073312556755,
+                "sequence_id": "6rcdoh160ycd6h8n7p4m3v"
+            }
+        }
+    ]
+}
