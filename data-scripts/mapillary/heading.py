@@ -8,13 +8,22 @@ import copy
 
 
 def compass_to_cartesian(compass_degrees):
-    # Subtracting the compass degrees from 90 to get the equivalent Cartesian angle,
-    # and then taking the modulus to keep the result between 0 and 360.
+    """  Subtracting the compass degrees from 90 to get the equivalent Cartesian angle,
+    and then taking the modulus to keep the result between 0 and 360.
+
+    Args:
+        compass_degrees (float): angle
+
+    Returns:
+        float: number with 2 decimal
+    """
     cartesian_degrees = (90 - compass_degrees) % 360
     return round(cartesian_degrees, 2)
 
 
 def point_to_line(start_point, angle_degrees, distance):
+    """Create a line from start position to a certain distance 
+    """
     x_start, y_start = start_point
     angle_radians = math.radians(angle_degrees)
     deltaX = distance * math.cos(angle_radians)

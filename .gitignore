@@ -164,3 +164,4 @@ node_modules/
 data/
 .DS_Store
 *_outputs.geojson
+data-scripts/fixtures/*outputs*.geojson
