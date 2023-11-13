@@ -26,7 +26,11 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/developmentseed/housing-passports-v2",
     keywords="",
-    entry_points={"console_scripts": ["mapillary_img_angles = mapillary.heading:main"]},
+    entry_points={"console_scripts": [
+        "mapillary_img_angles = mapillary.heading:main",
+        "attach_cvat_data = cvat.attach_data:main"
+
+    ]},
     packages=find_packages(exclude=["docs", "tests*"]),
     include_package_data=True,
     install_requires=install_requires,
