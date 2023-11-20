@@ -6,7 +6,7 @@ from tqdm import tqdm
 import fire
 
 
-def combine_resources(cvat_csv, original_geojson, geojson_output, csv_output):
+def combine_resources(cvat_csv, original_geojson, geojson_output, csv_output_trajectory):
     features = read_geojson(original_geojson)
     csv_data = read_csv(cvat_csv)
 
@@ -24,31 +24,28 @@ def combine_resources(cvat_csv, original_geojson, geojson_output, csv_output):
         props["box"] = csv_groups.get(fake_key, [])
 
     write_geojson(geojson_output, features)
-    # housing_passports format
+    # housing_passports formats
+    trajectories_out = []
     data_out = []
     for feature in tqdm(features, desc="Hp  format"):
-        props = feature.get("propeties", {})
+        props = feature.get("properties", {})
         lat, lng = feature.get("geometry", {}).get("coordinates")
-        for box in props.get("box", []):
-            data_ = {
-                "heading[deg]": props.get("compass_angle"),
-                "image_fname": f"{box.get('img_path')}/{box.get('img_name')}",
-                "frame": box.get('img_name', ""),
-                "latitude[deg]": lat,
-                "longitude[deg]": lng,
-                "box_label": box.get("box_label", ""),
-                "box_xtl": box.get("box_xtl", ""),
-                "box_ytl": box.get("box_ytl", ""),
-                "box_xbr": box.get("box_xbr", ""),
-                "box_ybr": box.get("box_ybr", ""),
-                "box_attr_building_condition": box.get("box_attr_building_condition", ""),
-                "box_attr_building_material": box.get("box_attr_building_material", ""),
-                "box_attr_building_use": box.get("box_attr_building_use", ""),
-                "box_attr_building_security": box.get("box_attr_building_security", ""),
-                "box_attr_building_completeness": box.get("box_attr_building_completeness", ""),
-            }
-            data_out.append(data_)
-    write_dictlist2csv(csv_output, data_out)
+        path_seq = props.get("image_path", "").split("/")
+        image_name = path_seq[-1]
+
+        trajectory = {
+            "heading[deg]": props.get("compass_angle"),
+            "image_fname": image_name,
+            "frame": image_name.split(".")[0],
+            "latitude[deg]": lat,
+            "longitude[deg]": lng,
+            "cam": path_seq[-2],
+            "neighborhood": "n1",
+            "subfolder": "/".join(['data', *path_seq[-3:-1]])
+        }
+        trajectories_out.append(trajectory)
+
+    write_dictlist2csv(csv_output_trajectory, trajectories_out)
 
 
 def main():
