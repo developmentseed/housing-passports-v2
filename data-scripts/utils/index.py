@@ -59,3 +59,29 @@ def write_dictlist2csv(output_file, list_features):
         writer = csv.DictWriter(csvfile, fieldnames=list(list_features[0].keys()))
         writer.writeheader()
         writer.writerows(list_features)
+
+
+def write_json(output_file, list_elements):
+    """Write json files
+
+    Args:
+        output_file (str): Location of ouput file
+        list_elements (list): List of features
+    """
+    with open(output_file, "w") as f:
+        json.dump(list_elements, f)
+
+
+def write_pbtxt_content(output_file, items):
+    """Write pbtxt files
+
+    Args:
+        output_file (str): Location of ouput file
+        items (dict): List of features
+    """
+    content = ""
+    for name, id in items.items():
+        content += f"item {{\n  id: {id}\n  name: '{name}'\n}}\n"
+
+    with open(output_file, "w") as f:
+        f.write(content)
