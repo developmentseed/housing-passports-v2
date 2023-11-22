@@ -140,10 +140,13 @@ def combine_resources(
                         new_key = BUILDING_PROPS.get(box_meta.get(prop_key))
                         box_building_props["detection_boxes"].append(deepcopy(box))
                         box_building_props["detection_classes"].append(new_key)
+                        box_building_props["detection_scores"].append(1)
+
             else:
                 new_key = BUILDING_PARTS.get(box_label)
                 box_building_parts["detection_boxes"].append(deepcopy(box))
                 box_building_parts["detection_classes"].append(new_key)
+                box_building_parts["detection_scores"].append(1)
 
         building_props_out.append(deepcopy(box_building_props))
         building_parts_out.append(deepcopy(box_building_parts))
