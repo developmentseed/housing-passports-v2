@@ -13,6 +13,7 @@ from tqdm import tqdm
 import fire
 import geopandas as gpd
 from copy import deepcopy
+from shapely import wkb
 
 BUILDING_PROPERTIES = [
     "box_attr_building_condition",
@@ -46,12 +47,7 @@ BUILDING_PROPS = {
     "good": 21,
 }
 
-BUILDING_PARTS = {
-    "window": 1,
-    "door": 2,
-    "garage": 3,
-    "disaster_mitigation": 4
-}
+BUILDING_PARTS = {"window": 1, "door": 2, "garage": 3, "disaster_mitigation": 4}
 
 
 def combine_resources(
@@ -160,6 +156,13 @@ def combine_resources(
 
     # write shp
     df_polygons["neighborhood"] = "n1"
+    df_polygons = df_polygons.to_crs(4326)
+    df_polygons["geometry"] = df_polygons["geometry"].apply(
+        lambda geom: geom
+        if geom.is_empty
+        else wkb.loads(wkb.dumps(geom, output_dimension=2))
+    )
+
     df_polygons.to_file(shp_buildings_file, driver="ESRI Shapefile")
 
 
