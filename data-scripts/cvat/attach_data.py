@@ -48,6 +48,10 @@ BUILDING_PROPS = {
 }
 
 BUILDING_PARTS = {"window": 1, "door": 2, "garage": 3, "disaster_mitigation": 4}
+IMAGE_SIDE = {
+    "right": 1,
+    "left": 2,
+}
 
 
 def combine_resources(
@@ -100,9 +104,9 @@ def combine_resources(
             "frame": image_name.split(".")[0],
             "latitude[deg]": lat,
             "longitude[deg]": lng,
-            "cam": path_seq[-2],
+            "cam": IMAGE_SIDE.get(path_seq[-2], 0),
             "neighborhood": "n1",
-            "subfolder": "/".join(["data", *path_seq[-3:-1]]),
+            "subfolder": "/".join(path_seq[-3:-1]),
         }
         box_props = {
             "detection_scores": [],
@@ -110,7 +114,7 @@ def combine_resources(
             "detection_boxes": [],
             "image_fname": image_name,
             "subfolder": "/".join(["data", *path_seq[-3:-1]]),
-            "cam": path_seq[-2],
+            "cam": IMAGE_SIDE.get(path_seq[-2], 0),
             "frame": image_name.split(".")[0],
             "neighborhood": "n1",
         }
