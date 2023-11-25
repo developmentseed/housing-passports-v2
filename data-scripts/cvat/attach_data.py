@@ -9,6 +9,7 @@ from utils.index import (
     write_json,
     write_pbtxt_content,
 )
+from mapillary.heading import compass_to_cartesian
 from tqdm import tqdm
 import fire
 import geopandas as gpd
@@ -49,9 +50,16 @@ BUILDING_PROPS = {
 
 BUILDING_PARTS = {"window": 1, "door": 2, "garage": 3, "disaster_mitigation": 4}
 IMAGE_SIDE = {
-    "right": 1,
-    "left": 2,
+    "right": 3,
+    "left": 1,
 }
+
+
+def pixel2proportion(box_meta_dict, x, y):
+    return round(
+        float(box_meta_dict.get(x, "")) / float(box_meta_dict.get(y, "")),
+        3,
+    )
 
 
 def combine_resources(
@@ -66,6 +74,7 @@ def combine_resources(
         props_map_file,
         parts_inference_file,
         parts_map_file,
+        prefix_path_images,
 ):
     features = read_geojson(original_geojson)
     csv_data_props = read_csv(annotation_properties_csv)
@@ -83,6 +92,7 @@ def combine_resources(
 
     for feature in tqdm(features, desc="merge features"):
         props = feature["properties"]
+        props["compass_angle_fix"] = compass_to_cartesian(props.get("compass_angle"))
         fake_key = "/".join(props.get("image_path", "").split("/")[-3:])
         props["box"] = csv_groups.get(fake_key, [])
 
@@ -94,26 +104,28 @@ def combine_resources(
 
     for feature in tqdm(features, desc="Hp  create format"):
         props = feature.get("properties", {})
-        lat, lng = feature.get("geometry", {}).get("coordinates")
+        lng, lat = feature.get("geometry", {}).get("coordinates")
         path_seq = props.get("image_path", "").split("/")
         image_name = path_seq[-1]
-
+        if not props.get("box", []):
+            continue
+        image_path_ = "/".join([prefix_path_images, *path_seq[-3:-1]])
         trajectory = {
-            "heading[deg]": props.get("compass_angle"),
+            "heading[deg]": compass_to_cartesian(props.get("compass_angle")),
             "image_fname": image_name,
             "frame": image_name.split(".")[0],
             "latitude[deg]": lat,
             "longitude[deg]": lng,
             "cam": IMAGE_SIDE.get(path_seq[-2], 0),
             "neighborhood": "n1",
-            "subfolder": "/".join(path_seq[-3:-1]),
+            "subfolder": image_path_,
         }
         box_props = {
             "detection_scores": [],
             "detection_classes": [],
             "detection_boxes": [],
             "image_fname": image_name,
-            "subfolder": "/".join(["data", *path_seq[-3:-1]]),
+            "subfolder": image_path_,
             "cam": IMAGE_SIDE.get(path_seq[-2], 0),
             "frame": image_name.split(".")[0],
             "neighborhood": "n1",
@@ -125,10 +137,10 @@ def combine_resources(
 
         for box_meta in props.get("box", []):
             box = [
-                float(box_meta.get("box_xtl", "")),
-                float(box_meta.get("box_ytl", "")),
-                float(box_meta.get("box_xbr", "")),
-                float(box_meta.get("box_ybr", "")),
+                pixel2proportion(box_meta, "box_xtl", "img_width"),
+                pixel2proportion(box_meta, "box_ytl", "img_height"),
+                pixel2proportion(box_meta, "box_xbr", "img_width"),
+                pixel2proportion(box_meta, "box_ybr", "img_height"),
             ]
 
             box_label = box_meta.get("box_label")

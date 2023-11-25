@@ -39,6 +39,7 @@ attach_cvat_data \
   $dataPrepared/props_inference_file.json \
   $dataPrepared/props_map_file.pbtxt \
   $dataPrepared/parts_inference_file.json \
-  $dataPrepared/parts_map_file.pbtxt
+  $dataPrepared/parts_map_file.pbtxt \
+  /Developer/housing-passports-v2/data-scripts/data/images
 
 #aws s3 sync $dataPrepared s3://hp-images-v2/data_prepared/
