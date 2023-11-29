@@ -1,7 +1,7 @@
 """
 Script for merge original data and cvat output
 """
-from utils.index import (
+from utils.utils import (
     read_geojson,
     write_geojson,
     read_csv,
@@ -9,50 +9,20 @@ from utils.index import (
     write_json,
     write_pbtxt_content,
 )
+from utils.constants import (
+    BUILDING_PARTS_DICT,
+    BUILDING_PROPS_DICT,
+    BUILDING_PARTS,
+    BUILDING_PROPS,
+    BUILDING_PROPERTIES_BOX_CVAT,
+    IMAGE_SIDE,
+)
 from mapillary.heading import compass_to_cartesian
 from tqdm import tqdm
 import fire
 import geopandas as gpd
 from copy import deepcopy
 from shapely import wkb
-
-BUILDING_PROPERTIES = [
-    "box_attr_building_condition",
-    "box_attr_building_material",
-    "box_attr_building_use",
-    "box_attr_building_security",
-    "box_attr_building_completeness",
-]
-
-BUILDING_PROPS = {
-    "brick_or_cement-concrete_block": 1,
-    "plaster": 2,
-    "wood_polished": 3,
-    "wood_crude-plank": 4,
-    "adobe": 5,
-    "corrugated_metal": 6,
-    "stone_with_mud-ashlar_with_lime_or_cement": 7,
-    "container-trailer": 8,
-    "plant_material": 9,
-    "mix-other-unclear": 10,
-    "complete": 11,
-    "incomplete": 12,
-    "residential": 13,
-    "mixed": 14,
-    "commercial": 15,
-    "critical_infrastructure": 16,
-    "unsecured": 17,
-    "secured": 18,
-    "fair": 19,
-    "poor": 20,
-    "good": 21,
-}
-
-BUILDING_PARTS = {"window": 1, "door": 2, "garage": 3, "disaster_mitigation": 4}
-IMAGE_SIDE = {
-    "right": 3,
-    "left": 1,
-}
 
 
 def pixel2proportion(box_meta_dict, x, y):
@@ -63,18 +33,20 @@ def pixel2proportion(box_meta_dict, x, y):
 
 
 def combine_resources(
-        annotation_properties_csv,
-        annotation_parts_csv,
-        original_geojson,
-        gpkg_buildings_file,
-        geojson_merge_output,
-        shp_buildings_file,
-        csv_output_trajectory,
-        props_inference_file,
-        props_map_file,
-        parts_inference_file,
-        parts_map_file,
-        prefix_path_images,
+    annotation_properties_csv,
+    annotation_parts_csv,
+    original_geojson,
+    gpkg_buildings_file,
+    geojson_merge_output,
+    shp_buildings_file,
+    csv_output_trajectory,
+    props_inference_file,
+    props_map_file,
+    parts_inference_file,
+    parts_map_file,
+    prefix_path_images,
+    props_keys_file,
+    part_keys_file,
 ):
     features = read_geojson(original_geojson)
     csv_data_props = read_csv(annotation_properties_csv)
@@ -110,13 +82,15 @@ def combine_resources(
         if not props.get("box", []):
             continue
         image_path_ = "/".join([prefix_path_images, *path_seq[-3:-1]])
+        cam = IMAGE_SIDE.get(path_seq[-2], 0)
+        frame = image_name.split(".")[0]
         trajectory = {
             "heading[deg]": compass_to_cartesian(props.get("compass_angle")),
             "image_fname": image_name,
-            "frame": image_name.split(".")[0],
+            "frame": frame,
             "latitude[deg]": lat,
             "longitude[deg]": lng,
-            "cam": IMAGE_SIDE.get(path_seq[-2], 0),
+            "cam": cam,
             "neighborhood": "n1",
             "subfolder": image_path_,
         }
@@ -126,8 +100,8 @@ def combine_resources(
             "detection_boxes": [],
             "image_fname": image_name,
             "subfolder": image_path_,
-            "cam": IMAGE_SIDE.get(path_seq[-2], 0),
-            "frame": image_name.split(".")[0],
+            "cam": cam,
+            "frame": frame,
             "neighborhood": "n1",
         }
         box_building_props = deepcopy(box_props)
@@ -147,7 +121,7 @@ def combine_resources(
             if not box_label:
                 continue
             if box_label == "building_properties":
-                for prop_key in BUILDING_PROPERTIES:
+                for prop_key in BUILDING_PROPERTIES_BOX_CVAT:
                     if box_meta.get(prop_key):
                         new_key = BUILDING_PROPS.get(box_meta.get(prop_key))
                         box_building_props["detection_boxes"].append(deepcopy(box))
@@ -183,6 +157,13 @@ def combine_resources(
     )
 
     df_polygons.to_file(shp_buildings_file, driver="ESRI Shapefile")
+    # keys file
+    write_json(
+        props_keys_file, {k: list(v.keys()) for k, v in BUILDING_PROPS_DICT.items()}
+    )
+    write_json(
+        part_keys_file, {k: list(v.keys()) for k, v in BUILDING_PARTS_DICT.items()}
+    )
 
 
 def main():

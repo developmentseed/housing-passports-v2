@@ -1,7 +1,7 @@
 import json
-import math
 from geojson import FeatureCollection
 import csv
+from itertools import chain
 
 
 def read_geojson(input_file):
@@ -55,21 +55,21 @@ def write_dictlist2csv(output_file, list_features):
     """
     if not list_features:
         return None
-    with open(output_file, 'w') as csvfile:
+    with open(output_file, "w") as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=list(list_features[0].keys()))
         writer.writeheader()
         writer.writerows(list_features)
 
 
-def write_json(output_file, list_elements):
+def write_json(output_file, dict_data):
     """Write json files
 
     Args:
         output_file (str): Location of ouput file
-        list_elements (list): List of features
+        dict_data (list, dict): List of features
     """
     with open(output_file, "w") as f:
-        json.dump(list_elements, f)
+        json.dump(dict_data, f)
 
 
 def write_pbtxt_content(output_file, items):
@@ -85,3 +85,17 @@ def write_pbtxt_content(output_file, items):
 
     with open(output_file, "w") as f:
         f.write(content)
+
+
+def dic2d2dict(data_):
+    """Convert dict values in simple dict
+
+    Args:
+        data_ (dict): Dict in 2d
+
+    Returns:
+        dict: dict
+    """
+    keys2d = [list(i.items()) for i in data_.values()]
+    keys = list(chain.from_iterable(list(keys2d)))
+    return {k: v for k, v in keys}
