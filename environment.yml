@@ -1,0 +1,23 @@
+name: hp
+channels:
+  - pytorch
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.10
+  - pip
+  - rasterio
+  - pip:
+      - einops~=0.7
+      - geopandas
+      - jupyterlab
+      - lightning~=2.1
+      - matplotlib
+      - opencv-python~=4.9
+      - pycocotools~=2.0
+      - scikit-learn~=1.3
+      - torch~=2.1
+      - torchvision~=0.16
+platforms:
+  - linux-64
+
