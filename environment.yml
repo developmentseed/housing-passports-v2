@@ -8,6 +8,7 @@ dependencies:
   - pip
   - rasterio
   - pip:
+      - aim~=3.17.5
       - einops~=0.7
       - geopandas
       - jupyterlab

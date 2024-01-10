@@ -116,7 +116,7 @@ class HouseDataModule(L.LightningDataModule):
     def val_dataloader(self):
         return DataLoader(
             self.val_ds,
-            shuffle=False,
+            shuffle=True,
             batch_size=self.batch_size,
             num_workers=self.num_workers,
             pin_memory=True,

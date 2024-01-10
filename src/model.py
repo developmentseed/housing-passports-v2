@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import torchmetrics
 import lightning as L
 from torchvision import models
 
@@ -8,6 +9,7 @@ from torchvision import models
 class HPClassifier(L.LightningModule):
     def __init__(
         self,
+        lr=1e-3,
         num_completeness=2,
         num_conditions=3,
         num_materials=8,
@@ -21,9 +23,6 @@ class HPClassifier(L.LightningModule):
         in_features = backbone.fc.in_features
 
         self.backbone = nn.Sequential(*list(backbone.children())[:-1])
-        # Freeze the backbone
-        for param in self.backbone.parameters():
-            param.requires_grad = False
 
         # Head for each of the building properties
         # complete
@@ -40,6 +39,20 @@ class HPClassifier(L.LightningModule):
 
         # use
         self.use_head = nn.Linear(in_features, num_uses)
+
+        self.complete_f1 = torchmetrics.F1Score(
+            task="multiclass", num_classes=num_completeness
+        )
+        self.condition_f1 = torchmetrics.F1Score(
+            task="multiclass", num_classes=num_conditions
+        )
+        self.material_f1 = torchmetrics.F1Score(
+            task="multiclass", num_classes=num_materials
+        )
+        self.security_f1 = torchmetrics.F1Score(
+            task="multiclass", num_classes=num_securities
+        )
+        self.use_f1 = torchmetrics.F1Score(task="multiclass", num_classes=num_uses)
 
     def forward(self, xb):
         features = self.backbone(xb)
@@ -60,7 +73,17 @@ class HPClassifier(L.LightningModule):
         )
 
     def configure_optimizers(self):
-        return torch.optim.AdamW(self.parameters(), lr=1e-3)
+        optimizer = torch.optim.AdamW(self.parameters(), lr=self.hparams.lr)
+        scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
+            optimizer, T_0=10, T_mult=2, eta_min=self.hparams.lr * 10, last_epoch=-1
+        )
+        return {
+            "optimizer": optimizer,
+            "lr_scheduler": {
+                "scheduler": scheduler,
+                "interval": "step",
+            },
+        }
 
     def shared_step(self, batch, phase):
         img, complete_idx, condition_idx, material_idx, security_idx, use_idx = batch
@@ -71,6 +94,18 @@ class HPClassifier(L.LightningModule):
             security_logits,
             use_logits,
         ) = self(img)
+
+        complete_preds = torch.argmax(complete_logits, dim=1)
+        condition_preds = torch.argmax(condition_logits, dim=1)
+        material_preds = torch.argmax(material_logits, dim=1)
+        security_preds = torch.argmax(security_logits, dim=1)
+        use_preds = torch.argmax(use_logits, dim=1)
+
+        complete_f1 = self.complete_f1(complete_preds, complete_idx)
+        condition_f1 = self.condition_f1(condition_preds, condition_idx)
+        material_f1 = self.material_f1(material_preds, material_idx)
+        security_f1 = self.security_f1(security_preds, security_idx)
+        use_f1 = self.use_f1(use_preds, use_idx)
 
         complete_loss = F.cross_entropy(complete_logits, complete_idx)
         condition_loss = F.cross_entropy(condition_logits, condition_idx)
@@ -87,6 +122,14 @@ class HPClassifier(L.LightningModule):
             prog_bar=True,
             logger=True,
         )
+
+        for properties in ("complete", "condition", "material", "security", "use"):
+            self.log(
+                f"{phase}_{properties}_f1",
+                locals()[f"{properties}_f1"],
+                prog_bar=True,
+                logger=True,
+            )
 
         return loss
 
