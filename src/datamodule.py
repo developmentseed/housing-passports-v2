@@ -76,6 +76,38 @@ class HouseDataset(Dataset):
         plt.title(title)
 
 
+def resize_and_pad(target_width, target_height):
+    def transform(image):
+        # Original dimensions
+        _, original_width, original_height = image.shape
+
+        # Determine scaling factor and resize
+        scaling_factor = min(
+            target_width / original_width, target_height / original_height
+        )
+        new_width, new_height = int(original_width * scaling_factor), int(
+            original_height * scaling_factor
+        )
+        resized_image = v2.Resize((new_height, new_width), antialias=True)(image)
+
+        # Calculate padding
+        padding_left = (target_width - new_width) // 2
+        padding_top = (target_height - new_height) // 2
+        padding_right = target_width - new_width - padding_left
+        padding_bottom = target_height - new_height - padding_top
+
+        # Pad the resized image
+        padded_image = v2.Pad(
+            (padding_left, padding_top, padding_right, padding_bottom),
+            fill=0,
+            padding_mode="constant",
+        )(resized_image)
+
+        return padded_image
+
+    return transform
+
+
 class HouseDataModule(L.LightningDataModule):
     def __init__(self, img_dir, label_file, batch_size, num_workers):
         self.img_dir = Path(img_dir)
@@ -84,7 +116,7 @@ class HouseDataModule(L.LightningDataModule):
         self.num_workers = num_workers
         self.trn_tfm = v2.Compose(
             [
-                v2.Resize(size=(224, 224), antialias=True),
+                resize_and_pad(224, 224),
                 v2.RandomHorizontalFlip(p=0.5),
                 v2.ToDtype(torch.float32, scale=True),
                 v2.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
@@ -92,7 +124,7 @@ class HouseDataModule(L.LightningDataModule):
         )
         self.val_tfm = v2.Compose(
             [
-                v2.Resize(size=(224, 224), antialias=True),
+                resize_and_pad(224, 224),
                 v2.ToDtype(torch.float32, scale=True),
                 v2.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
             ]

@@ -11,7 +11,7 @@ L.seed_everything(42)
 
 def main():
     logger = AimLogger(
-        experiment="test-aim-1",
+        experiment="hp-padded",
         train_metric_prefix="train_",
         val_metric_prefix="val_",
     )
@@ -47,7 +47,7 @@ def main():
     trainer = L.Trainer(
         devices="auto",
         accelerator="auto",
-        max_epochs=20,
+        max_epochs=50,
         precision="bf16-mixed",
         logger=logger,
         callbacks=[lr_cb, ckpt_cb, backbone_freeze_unfreeze_cb],
