@@ -1,0 +1,9 @@
+version: '3'
+services:
+  hpdev:
+    image: developmentseed/hpdev:v2
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/mnt
