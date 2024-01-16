@@ -37,17 +37,40 @@ def combine_resources(
     annotation_parts_csv,
     original_geojson,
     gpkg_buildings_file,
-    geojson_merge_output,
     shp_buildings_file,
+    prefix_path_images,
+    geojson_merge_output,
     csv_output_trajectory,
     props_inference_file,
     props_map_file,
     parts_inference_file,
     parts_map_file,
-    prefix_path_images,
     props_keys_file,
     part_keys_file,
 ):
+    """
+    Allows you to create the necessary files to run db_compilation.sh from housing_passports v1.
+
+    This function integrates the annotated cvat data in csv format, the original points and the buildings to combine and validate them.
+
+    Parameters:
+    - annotation_properties_csv (str): Path CSV file containing annotation properties.
+    - annotation_parts_csv (str): Path CSV file containing annotation parts.
+    - original_geojson (str): Path GeoJSON points file.
+    - gpkg_buildings_file (str): Path GeoPackage file with building data.
+    - shp_buildings_file (str): Path output Shapefile containing building data.
+    - prefix_path_images (str): Prefix path for images.
+    - geojson_merge_output (str): Path output merged GeoJSON file.
+    - csv_output_trajectory (str): Path output CSV file with trajectory information.
+    - props_inference_file (str): Path output JSON file with properties inference data.
+    - props_map_file (str): Path output protobuf text file mapping properties.
+    - parts_inference_file (str): Path output JSON file with parts inference data.
+    - parts_map_file (str): Path output protobuf text file mapping parts.
+    - props_keys_file (str): Path output JSON file with properties keys.
+    - part_keys_file (str): Path output JSON file with parts keys.
+
+    """
+
     features = read_geojson(original_geojson)
     csv_data_props = read_csv(annotation_properties_csv)
     csv_data_parts = read_csv(annotation_parts_csv)
