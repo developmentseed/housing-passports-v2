@@ -1,3 +1,4 @@
+import sys
 from aim.pytorch_lightning import AimLogger
 import lightning as L
 from lightning.pytorch.callbacks import LearningRateMonitor, ModelCheckpoint
@@ -6,26 +7,26 @@ from src.datamodule import HouseDataModule
 from src.model import HPClassifier
 from src.callbacks import BackboneFreezeUnfreeze
 
-L.seed_everything(42)
+L.seed_everything(42, workers=True)
 
 
-def main():
+def main(name):
     logger = AimLogger(
-        experiment="hp-padded",
+        experiment=name,
         train_metric_prefix="train_",
         val_metric_prefix="val_",
     )
     # datamodule
     dm = HouseDataModule(
         img_dir="notebooks/output/images_clipped_buffered/",
-        label_file="notebooks/data.csv",
+        data_dir="data/intermediate/",
         batch_size=256,
         num_workers=8,
     )
-    dm.setup(stage="fit")
+    dm.setup()
 
     # model
-    model = HPClassifier(lr=1e-3)
+    model = HPClassifier(lr=1e-4)
 
     # Callbacks
     lr_cb = LearningRateMonitor(
@@ -47,17 +48,25 @@ def main():
     trainer = L.Trainer(
         devices="auto",
         accelerator="auto",
-        max_epochs=50,
+        max_epochs=20,
         precision="bf16-mixed",
         logger=logger,
         callbacks=[lr_cb, ckpt_cb, backbone_freeze_unfreeze_cb],
     )
+
+    # fit
     trainer.fit(
         model,
         train_dataloaders=dm.train_dataloader(),
         val_dataloaders=dm.val_dataloader(),
     )
 
+    # test
+    trainer.test(
+        ckpt_path="best",
+        dataloaders=dm.test_dataloader(),
+    )
+
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1])

@@ -5,7 +5,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import torch
 import lightning as L
-from sklearn.model_selection import train_test_split
 from torchvision.io import read_image
 from torchvision.transforms import v2
 from torch.utils.data import Dataset, DataLoader
@@ -109,32 +108,46 @@ def resize_and_pad(target_width, target_height):
 
 
 class HouseDataModule(L.LightningDataModule):
-    def __init__(self, img_dir, label_file, batch_size, num_workers):
+    def __init__(self, img_dir, data_dir, batch_size, num_workers):
         self.img_dir = Path(img_dir)
-        self.label_file = label_file
+        self.data_dir = Path(data_dir)
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.trn_tfm = v2.Compose(
             [
-                resize_and_pad(224, 224),
+                # resize_and_pad(224, 224),
+                v2.RandomResizedCrop(224, scale=(0.8, 1.2), antialias=True),
                 v2.RandomHorizontalFlip(p=0.5),
+                v2.RandomAffine(
+                    degrees=(0, 30),
+                    translate=(0.1, 0.3),
+                ),
+                v2.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.2),
                 v2.ToDtype(torch.float32, scale=True),
                 v2.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
             ]
         )
-        self.val_tfm = v2.Compose(
+        self.val_tfm = self.tst_tfm = v2.Compose(
             [
-                resize_and_pad(224, 224),
+                # resize_and_pad(224, 224),
+                v2.Resize((224, 224), antialias=True),
                 v2.ToDtype(torch.float32, scale=True),
                 v2.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
             ]
         )
 
     def setup(self, stage=None):
-        df = pd.read_csv(self.label_file)
-        trn_df, val_df = train_test_split(df, test_size=0.2, shuffle=True)
-        self.trn_ds = HouseDataset(trn_df, self.img_dir, self.trn_tfm)
-        self.val_ds = HouseDataset(val_df, self.img_dir, self.val_tfm)
+        if stage == "fit" or stage is None:
+            trn_df = pd.read_csv(self.data_dir / "train.csv")
+            val_df = pd.read_csv(self.data_dir / "valid.csv")
+
+            self.trn_ds = HouseDataset(trn_df, self.img_dir, self.trn_tfm)
+            self.val_ds = HouseDataset(val_df, self.img_dir, self.val_tfm)
+        elif stage == "test" or stage is None:
+            tst_df = pd.read_csv(self.data_dir / "test.csv")
+            self.tst_ds = HouseDataset(tst_df, self.img_dir, self.tst_tfm)
+        else:
+            raise ValueError(f"Invalid stage: {stage}")
 
     def train_dataloader(self):
         return DataLoader(
@@ -148,7 +161,16 @@ class HouseDataModule(L.LightningDataModule):
     def val_dataloader(self):
         return DataLoader(
             self.val_ds,
-            shuffle=True,
+            shuffle=False,
+            batch_size=self.batch_size,
+            num_workers=self.num_workers,
+            pin_memory=True,
+        )
+
+    def test_dataloader(self):
+        return DataLoader(
+            self.val_ds,
+            shuffle=False,
             batch_size=self.batch_size,
             num_workers=self.num_workers,
             pin_memory=True,
