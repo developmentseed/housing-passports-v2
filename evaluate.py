@@ -1,60 +1,90 @@
+import sys
 import torch
 import numpy as np
 from src.datamodule import HouseDataModule
 from src.model import HPClassifier
-import matplotlib.pyplot as plt
-import torch.nn.functional as F
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report
 import seaborn as sns
+import matplotlib.pyplot as plt
 
-CKPT_PATH = ".aim/complete-ce-weighted-full2/b585539aa6864aa9be8e27fa/checkpoints/epoch:15-step:528-loss:0.669.ckpt"
 
-dm = HouseDataModule(
-    img_dir="notebooks/output/images_clipped_buffered/",
-    data_dir="data/intermediate",
-    batch_size=16,
-    num_workers=1,
-)
-dm.setup(stage="fit")
+def load_model(checkpoint_path):
+    try:
+        model = HPClassifier.load_from_checkpoint(checkpoint_path)
+        return model
+    except Exception as e:
+        print(f"Failed to load model from {checkpoint_path}: {e}")
+        sys.exit(1)
 
-model = HPClassifier.load_from_checkpoint(CKPT_PATH)
 
-complete = {"preds": [], "labels": []}
+def evaluate_model(model, dataloader, device):
+    categories = {
+        "complete": {"preds": [], "labels": [], "names": ["complete", "incomplete"]},
+        "condition": {"preds": [], "labels": [], "names": ["poor", "fair", "good"]},
+        "material": {
+            "preds": [],
+            "labels": [],
+            "names": [
+                "mix-other-unclear",
+                "plaster",
+                "brick_or_cement-concrete_block",
+                "wood_polished",
+                "stone_with_mud-ashlar_with_lime_or_cement",
+                "corrugated_metal",
+                "wood_crude-plank",
+                "container-trailer",
+            ],
+        },
+        "security": {"preds": [], "labels": [], "names": ["secured", "unsecured"]},
+        "use": {
+            "preds": [],
+            "labels": [],
+            "names": ["residential", "critical_infrastructure", "mixed", "commercial"],
+        },
+    }
 
-with torch.no_grad():
-    for batch in dm.val_dataloader():
-        img, complete_idx, condition_idx, material_idx, security_idx, use_idx = batch
-        (
-            complete_logits,
-            # condition_logits,
-            # material_logits,
-            # security_logits,
-            # use_logits,
-        ) = model(img.to(model.device))
-        # complete_preds, condition_preds, material_preds, security_preds, use_preds = (
-        #     torch.argmax(complete_logits, dim=1),
-        #     torch.argmax(condition_logits, dim=1),
-        #     torch.argmax(material_logits, dim=1),
-        #     torch.argmax(security_logits, dim=1),
-        #     torch.argmax(use_logits, dim=1),
-        # )
-        complete_preds = torch.argmax(complete_logits, dim=1)
-        complete["preds"].extend(complete_preds.cpu().numpy())
-        complete["labels"].extend(complete_idx.cpu().numpy())
-        # condition["preds"].extend(condition_preds.cpu().numpy())
-        # condition["labels"].extend(condition_idx.cpu().numpy())
-        # material["preds"].extend(material_preds.cpu().numpy())
-        # material["labels"].extend(material_idx.cpu().numpy())
-        # security["preds"].extend(security_preds.cpu().numpy())
-        # security["labels"].extend(security_idx.cpu().numpy())
-        # use["preds"].extend(use_preds.cpu().numpy())
-        # use["labels"].extend(use_idx.cpu().numpy())
+    with torch.no_grad():
+        for batch in dataloader():
+            img, *labels = batch
+            logits = model(img.to(device))
+            preds = [torch.argmax(logit, dim=1).cpu().numpy() for logit in logits]
 
-print(
-    classification_report(
-        complete["labels"],
-        complete["preds"],
-        labels=[0, 1],
-        target_names=["complete", "incomplete"],
+            for key, (pred, label) in zip(categories.keys(), zip(preds, labels)):
+                categories[key]["preds"].extend(pred)
+                categories[key]["labels"].extend(label.cpu().numpy())
+
+    return categories
+
+
+def print_classification_reports(categories):
+    for category, data in categories.items():
+        print(f"\nCategory: {category}")
+        print(
+            classification_report(
+                data["labels"], data["preds"], target_names=data["names"]
+            )
+        )
+
+
+def main(ckpt_path):
+    dm = HouseDataModule(
+        img_dir="notebooks/output/images_clipped_buffered/",
+        data_dir="data/intermediate",
+        batch_size=16,
+        num_workers=1,
     )
-)
+    dm.setup(stage="fit")
+
+    model = load_model(ckpt_path)
+    model.to(model.device)  # Ensure model is on the correct device
+
+    categories = evaluate_model(model, dm.val_dataloader, model.device)
+    print_classification_reports(categories)
+
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: python script.py <CHECKPOINT_PATH>")
+        sys.exit(1)
+    CKPT_PATH = sys.argv[1]
+    main(CKPT_PATH)
