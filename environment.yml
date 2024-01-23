@@ -19,6 +19,7 @@ dependencies:
       - scikit-learn~=1.3
       - torch~=2.1
       - torchvision~=0.16
+      - timm~=0.9.12
 platforms:
   - linux-64
 
