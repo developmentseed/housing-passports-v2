@@ -20,13 +20,13 @@ def main(name):
     dm = HouseDataModule(
         img_dir="notebooks/output/images_clipped_buffered/",
         data_dir="data/intermediate/",
-        batch_size=256,
+        batch_size=128,
         num_workers=8,
     )
     dm.setup()
 
     # model
-    model = HPClassifier(lr=1e-4)
+    model = HPClassifier(lr=1e-3)
 
     # Callbacks
     lr_cb = LearningRateMonitor(
@@ -34,12 +34,12 @@ def main(name):
         log_momentum=True,
     )
     ckpt_cb = ModelCheckpoint(
-        monitor="val_loss",
-        mode="min",
+        monitor="val_totalf1",
+        mode="max",
         save_top_k=2,
         save_last=True,
         verbose=True,
-        filename="epoch:{epoch}-step:{step}-loss:{val_loss:.3f}",
+        filename="epoch:{epoch}-step:{step}-loss:{val_loss:.3f}-f1:{val_totalf1:.3f}",
         auto_insert_metric_name=False,
     )
     backbone_freeze_unfreeze_cb = BackboneFreezeUnfreeze(unfreeze_at_epoch=10)
@@ -48,7 +48,7 @@ def main(name):
     trainer = L.Trainer(
         devices="auto",
         accelerator="auto",
-        max_epochs=20,
+        max_epochs=50,
         precision="bf16-mixed",
         logger=logger,
         callbacks=[lr_cb, ckpt_cb, backbone_freeze_unfreeze_cb],
