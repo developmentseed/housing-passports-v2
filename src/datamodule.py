@@ -7,7 +7,7 @@ import torch
 import lightning as L
 from torchvision.io import read_image
 from torchvision.transforms import v2
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset, DataLoader, WeightedRandomSampler
 
 
 class HouseDataset(Dataset):
@@ -35,6 +35,7 @@ class HouseDataset(Dataset):
             "mixed": 2,
             "commercial": 3,
         }
+        self.weights = self.df["weights"]
 
     def __getattr__(self, name):
         "Creates a reverse mapping for all the building properties"
@@ -142,6 +143,12 @@ class HouseDataModule(L.LightningDataModule):
             val_df = pd.read_csv(self.data_dir / "valid.csv")
 
             self.trn_ds = HouseDataset(trn_df, self.img_dir, self.trn_tfm)
+            self.trn_sampler = WeightedRandomSampler(
+                weights=self.trn_ds.weights,
+                num_samples=len(self.trn_ds),
+                replacement=True,
+            )
+
             self.val_ds = HouseDataset(val_df, self.img_dir, self.val_tfm)
         elif stage == "test" or stage is None:
             tst_df = pd.read_csv(self.data_dir / "test.csv")
@@ -152,7 +159,8 @@ class HouseDataModule(L.LightningDataModule):
     def train_dataloader(self):
         return DataLoader(
             self.trn_ds,
-            shuffle=True,
+            sampler=self.trn_sampler,
+            shuffle=False,
             batch_size=self.batch_size,
             num_workers=self.num_workers,
             pin_memory=True,
@@ -169,7 +177,7 @@ class HouseDataModule(L.LightningDataModule):
 
     def test_dataloader(self):
         return DataLoader(
-            self.val_ds,
+            self.tst_ds,
             shuffle=False,
             batch_size=self.batch_size,
             num_workers=self.num_workers,
