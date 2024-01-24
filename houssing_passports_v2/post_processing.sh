@@ -49,8 +49,8 @@ $hpdev attach_data \
   --annotation_parts_csv=$dataOut/parts.csv \
   --original_geojson=$dataOut/map_points__pano_clip.geojson \
   --gpkg_buildings_file=$dataOut/bldgs_combined.gpkg \
-  --shp_buildings_file=$shpOut/shp_building.shp \
   --prefix_path_images=$dataOut/images \
+  --shp_buildings_file=$shpOut/shp_building.shp \
   --geojson_merge_output=$dataPrepared/annotation_merge.geojson \
   --csv_output_trajectory=$dataPrepared/trajectory.csv \
   --props_inference_file=$dataPrepared/props_inference_file.json \

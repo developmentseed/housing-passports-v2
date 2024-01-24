@@ -37,8 +37,8 @@ def combine_resources(
     annotation_parts_csv,
     original_geojson,
     gpkg_buildings_file,
-    shp_buildings_file,
     prefix_path_images,
+    shp_buildings_file,
     geojson_merge_output,
     csv_output_trajectory,
     props_inference_file,
@@ -58,8 +58,8 @@ def combine_resources(
     - annotation_parts_csv (str): Path CSV file containing annotation parts.
     - original_geojson (str): Path GeoJSON points file.
     - gpkg_buildings_file (str): Path GeoPackage file with building data.
-    - shp_buildings_file (str): Path output Shapefile containing building data.
     - prefix_path_images (str): Prefix path for images.
+    - shp_buildings_file (str): Path output Shapefile containing building data.
     - geojson_merge_output (str): Path output merged GeoJSON file.
     - csv_output_trajectory (str): Path output CSV file with trajectory information.
     - props_inference_file (str): Path output JSON file with properties inference data.
