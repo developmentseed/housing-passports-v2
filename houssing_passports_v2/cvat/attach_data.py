@@ -1,5 +1,5 @@
 """
-Script for merge original data and cvat output
+Script for merge original data and detections
 """
 from utils.utils import (
     read_geojson,

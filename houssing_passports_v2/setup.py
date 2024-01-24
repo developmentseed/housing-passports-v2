@@ -29,7 +29,7 @@ setup(
     entry_points={
         "console_scripts": [
             "mapillary_img_angles=mapillary.heading:main",
-            "attach_cvat_data=cvat.attach_data:main",
+            "attach_data=cvat.attach_data:main",
         ]
     },
     packages=find_packages(exclude=["docs", "tests*"]),
