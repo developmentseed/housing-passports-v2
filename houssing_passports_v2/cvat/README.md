@@ -111,5 +111,212 @@ example:
    }
 }
 ```
-- **gpkg_buildings_file** : Contains the original polygons in geopackage format, attributes are not evaluated.
+- **gpkg_buildings_file** : Contains the original footprints in geopackage format, attributes are not evaluated.
 - **prefix_path_images** : It is the relative path of the images.
+
+### output files
+
+- **shp_buildings_file** : Contains the footprints in shapely format, with an additional attribute `neighborho`.
+
+- **geojson_merge_output** : Each element is a point from mapillary data that contains the grouped detections.
+  - *box* : contains a list of all detections that belong to the point.
+  
+    example:
+
+```json
+{
+   "type":"Feature",
+   "geometry":{
+      "type":"Point",
+      "coordinates":[
+         -61.46082937717438,
+         15.583129017592881
+      ]
+   },
+   "properties":{
+      "captured_at":1692223800000,
+      "compass_angle":329.562,
+      "id":627834716082798,
+      "is_pano":true,
+      "organization_id":276431331814934,
+      "sequence_id":"SG4gUpQDdl1HvxCkMzErFq",
+      "image_path":"s3://hp-images-v2/mapillary_images/SG4gUpQDdl1HvxCkMzErFq/left/627834716082798_left.jpg",
+      "compass_angle_fix":120.44,
+      "box":[
+         {
+            "img_id":"6842",
+            "img_width":"1024",
+            "img_height":"1024",
+            "img_path":"SG4gUpQDdl1HvxCkMzErFq/left",
+            "img_name":"627834716082798_left.jpg",
+            "box_label":"building_properties",
+            "box_occluded":"0",
+            "box_xtl":"123.84",
+            "box_ytl":"399.83",
+            "box_xbr":"501.77",
+            "box_ybr":"689.10",
+            "box_attr_building_condition":"residential",
+            "box_attr_building_security":"complete",
+            "box_attr_building_use":"wood_polished",
+            "box_attr_building_material":"unsecured",
+            "box_attr_building_completeness":"fair"
+         },
+         ...
+      ]
+   }
+}
+```
+
+- **csv_output_trajectory** : GPS trajectory info for each image.
+  - *heading[deg]* : Compass heading of point.
+  - *image_fname* : Image file name.
+  - *frame* : Frame number of the image.
+  - *latitude[deg]* : Longitude of the point.
+  - *longitude[deg]* : Latitude of the point.
+  - *cam* : Camera number.
+  - *neighborhood* : Neighborhood where frame was taken.
+  - *subfolder* : Relative path to the image file within the dataset.
+ 
+  example:
+
+|heading[deg]|image_fname|frame|latitude[deg]|longitude[deg]|cam|neighborhood|subfolder|
+|---|---|---|---|---|---|---|---|
+|47.32|267316452731807_left.jpg|267316452731807_left|15.469439229239484|-61.45654857158661|1|n1|data/images/CXIswiV1efalvHrFonDW23/left|
+|76.57|201534059574615_left.jpg|201534059574615_left|15.483594425549313|-61.462910771369934|1|n1|data/images/CXIswiV1efalvHrFonDW23/left|
+
+- **props_inference_file** : List of detections of building properties.
+
+    example:
+
+```json
+
+{
+   "detection_scores":[
+      1,
+      1,
+      ...
+   ],
+   "detection_classes":[
+      18,
+      13,
+      ....
+   ],
+   "detection_boxes":[
+      [
+         0.781,
+         0.517,
+         0.954,
+         0.633
+      ],
+      ...
+   ],
+   "image_fname":"267316452731807_left.jpg",
+   "subfolder":"data/images/CXIswiV1efalvHrFonDW23/left",
+   "cam":1,
+   "frame":"267316452731807_left",
+   "neighborhood":"n1"
+}
+
+```
+
+- **props_map_file** : PBTXT file mapping building properties.
+
+    example:
+
+```text
+
+item {
+  id: 1
+  name: 'brick_or_cement-concrete_block'
+}
+...
+
+```
+
+- **parts_inference_file** : List of detections of building parts.
+
+    example:
+
+```json
+
+{
+   "detection_scores":[
+      1,
+      ...
+   ],
+   "detection_classes":[
+      1,
+      ...
+   ],
+   "detection_boxes":[
+      [
+         0.802,
+         0.552,
+         0.833,
+         0.584
+      ],
+      ...
+   ],
+   "image_fname":"267316452731807_left.jpg",
+   "subfolder":"data/images/CXIswiV1efalvHrFonDW23/left",
+   "cam":1,
+   "frame":"267316452731807_left",
+   "neighborhood":"n1"
+}
+
+```
+
+- **parts_map_file** : PBTXT file mapping building parts.
+
+    example:
+
+```text
+
+item {
+  id: 1
+  name: 'window'
+}
+...
+
+```
+
+- **props_keys_file** : Json building properties.
+
+    example:
+
+```json
+
+{
+  "materials":[
+     "brick_or_cement-concrete_block",
+     "plaster",
+     "wood_polished",
+     "wood_crude-plank",
+     ....
+  ],
+  "use":[
+     "residential",
+     "mixed",
+     ...
+  ],
+  ...
+}
+
+```
+
+- **part_keys_file** : Json building parts.
+
+    example:
+
+```json
+
+{
+  "parts":[
+     "window",
+     "door",
+     "garage",
+     "disaster_mitigation"
+  ]
+}
+
+```
