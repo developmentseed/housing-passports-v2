@@ -68,8 +68,8 @@ def print_classification_reports(categories):
 
 def main(ckpt_path):
     dm = HouseDataModule(
-        img_dir="notebooks/output/images_clipped_buffered/",
-        data_dir="data/intermediate",
+        img_dir="/home/ubuntu/data/",
+        data_dir="/home/ubuntu/model/housing-passports-v2/data/intermediate",
         batch_size=16,
         num_workers=1,
     )

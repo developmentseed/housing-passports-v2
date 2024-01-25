@@ -10,7 +10,7 @@ from src.callbacks import BackboneFreezeUnfreeze
 L.seed_everything(42, workers=True)
 
 
-def main(name):
+def main(name, focus_class):
     logger = AimLogger(
         experiment=name,
         train_metric_prefix="train_",
@@ -18,8 +18,9 @@ def main(name):
     )
     # datamodule
     dm = HouseDataModule(
-        img_dir="notebooks/output/images_clipped_buffered/",
-        data_dir="data/intermediate/",
+        img_dir="/home/ubuntu/data/", #"/home/ubuntu/data/images_clipped_buffered/",
+        data_dir="/home/ubuntu/model/housing-passports-v2/data/intermediate/",
+        focus_class=focus_class,
         batch_size=128,
         num_workers=8,
     )
@@ -69,4 +70,4 @@ def main(name):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    main(sys.argv[1], sys.argv[2])
