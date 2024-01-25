@@ -66,10 +66,11 @@ def print_classification_reports(categories):
         )
 
 
-def main(ckpt_path):
+def main(ckpt_path, focus_class):
     dm = HouseDataModule(
         img_dir="/home/ubuntu/data/",
         data_dir="/home/ubuntu/model/housing-passports-v2/data/intermediate",
+        focus_class=focus_class,
         batch_size=16,
         num_workers=1,
     )
@@ -87,4 +88,5 @@ if __name__ == "__main__":
         print("Usage: python script.py <CHECKPOINT_PATH>")
         sys.exit(1)
     CKPT_PATH = sys.argv[1]
-    main(CKPT_PATH)
+    focus_class = sys.argv[2]
+    main(CKPT_PATH, focus_class)
