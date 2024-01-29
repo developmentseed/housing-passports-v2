@@ -2,13 +2,13 @@
 Script for Generating Visual Lines from Points to Illustrate Mapillary Headings
 """
 import fire
-from utils.index import read_geojson, write_geojson
+from utils.utils import read_geojson, write_geojson
 import math
 import copy
 
 
 def compass_to_cartesian(compass_degrees):
-    """  Subtracting the compass degrees from 90 to get the equivalent Cartesian angle,
+    """Subtracting the compass degrees from 90 to get the equivalent Cartesian angle,
     and then taking the modulus to keep the result between 0 and 360.
 
     Args:
@@ -22,8 +22,7 @@ def compass_to_cartesian(compass_degrees):
 
 
 def point_to_line(start_point, angle_degrees, distance):
-    """Create a line from start position to a certain distance 
-    """
+    """Create a line from start position to a certain distance"""
     x_start, y_start = start_point
     angle_radians = math.radians(angle_degrees)
     deltaX = distance * math.cos(angle_radians)
@@ -50,7 +49,7 @@ def create_line_features(features, distance):
 
     for feature in features:
         # cartesian_angle = compass_to_cartesian(feature["properties"]["compass_angle"])
-        cartesian_angle=feature["properties"]["compass_angle"]
+        cartesian_angle = feature["properties"]["compass_angle"]
         start_point = feature["geometry"]["coordinates"]
 
         ######## Headding

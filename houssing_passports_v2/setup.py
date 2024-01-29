@@ -18,7 +18,7 @@ dependency_links = [x.strip().replace("git+", "") for x in all_reqs if "git+" no
 
 setup(
     name="housing-passports-v2",
-    author="DevSeed",
+    author="Develomentseed",
     author_email="devseed@developmentseed.org",
     version=__version__,
     description="Template for python script",
@@ -26,7 +26,12 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/developmentseed/housing-passports-v2",
     keywords="",
-    entry_points={"console_scripts": ["mapillary_img_angles = mapillary.heading:main"]},
+    entry_points={
+        "console_scripts": [
+            "mapillary_img_angles=mapillary.heading:main",
+            "attach_data=cvat.attach_data:main",
+        ]
+    },
     packages=find_packages(exclude=["docs", "tests*"]),
     include_package_data=True,
     install_requires=install_requires,

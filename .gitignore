@@ -165,3 +165,6 @@ data/
 .DS_Store
 *_outputs.geojson
 data-scripts/fixtures/*outputs*.geojson
+
+data/*
+.idea/
