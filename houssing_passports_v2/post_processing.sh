@@ -4,40 +4,23 @@ set -e
 export AWS_PROFILE=yunica-hp
 
 dataOut=data
-dataPrepared=$dataOut/files_for_db
+dataPrepared=$dataOut/files_for_db_ne
 shpOut=$dataPrepared/shp_building
 
 mkdir -p $shpOut
 
-#geokitpy="docker run --rm -v ${PWD}:/mnt/data developmentseed/geokit:python.latest"
 #hpdev="docker run --rm -v ${PWD}:/mnt developmentseed/hpdev:v2"
 
 # ###################
 # download data
 # ###################
 
-#aws s3 cp s3://hp-images-v2/mapillary_files/map_points__pano_clip.geojson $dataOut/map_points__pano_clip.geojson
-#aws s3 cp s3://hp-deliverables-v2/xml_format/parts_left.xml $dataOut/parts.xml
-#aws s3 cp s3://hp-deliverables-v2/xml_format/properties_left.xml $dataOut/properties.xml
+#aws s3 cp s3://hp-images-v2/mapillary_files/s3://hp-images-v2/mapillary_files/new_mapillary_points_panoramic_process_update.geojson $dataOut/new_mapillary_points_panoramic_process_update.geojson
 #aws s3 cp s3://hp-images-v2/mapillary_files/bldgs_combined.gpkg $dataOut/bldgs_combined.gpkg
 # ###################
 # sync images
 # ###################
 #aws s3 sync s3://hp-images-v2/mapillary_images/ $dataOut/images
-# ###################
-# convert xml to csv
-# ###################
-
-#$geokitpy cvat xml2csv \
-#  --xml_file=$dataOut/properties.xml \
-#  --csv_file=$dataOut/properties.csv \
-#  --full=True
-#
-#$geokitpy cvat xml2csv \
-#  --xml_file=$dataOut/parts.xml \
-#  --csv_file=$dataOut/parts.csv \
-#  --full=True
-
 
 
 # ###################
@@ -46,7 +29,7 @@ mkdir -p $shpOut
 
 attach_data \
   --predictions_csv=$dataOut/all_predictions.csv \
-  --original_geojson=$dataOut/map_points__pano_clip.geojson \
+  --original_geojson=$dataOut/new_mapillary_points_panoramic_process_update.geojson \
   --gpkg_buildings_file=$dataOut/bldgs_combined.gpkg \
   --prefix_path_images=$dataOut/images \
   --shp_buildings_file=$shpOut/shp_building.shp \
