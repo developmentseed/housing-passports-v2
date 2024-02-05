@@ -16,7 +16,6 @@ from utils.constants import (
     BUILDING_PROPS_DICT,
     BUILDING_PARTS,
     BUILDING_PROPS,
-    BUILDING_PROPERTIES_BOX_CVAT,
     IMAGE_SIDE,
 )
 from mapillary.heading import compass_to_cartesian
@@ -27,7 +26,7 @@ from copy import deepcopy
 from shapely import wkb
 
 
-def pixel2proportion(box_values, w=1024, h=1024, r=3):
+def pixel2proportion(box_values, w=1024, h=1024, r=6):
     # x_min, y_min, x_max, y_max
     return [
         round(
@@ -92,14 +91,14 @@ def combine_resources(
     df_polygons = gpd.read_file(gpkg_buildings_file)
     # group csv data
     csv_groups = {}
-    for box in tqdm(csv_predictions_data, desc="join data"):
+    for box in tqdm(csv_predictions_data, desc="group csv data"):
         fake_key = box.get("image_name")
         box["boxes"] = json.loads(box.get("boxes"))
         if not csv_groups.get(fake_key):
             csv_groups[fake_key] = []
         csv_groups[fake_key].append(box)
 
-    for feature in tqdm(features, desc="merge features"):
+    for feature in tqdm(features, desc="merge features and csv"):
         props = feature.get("properties")
         props["compass_angle_fix"] = compass_to_cartesian(props.get("compass_angle"))
         fake_key = "/".join(props.get("image_path", "").split("/")[-3:])
@@ -128,7 +127,7 @@ def combine_resources(
             "latitude[deg]": lat,
             "longitude[deg]": lng,
             "cam": cam,
-            "neighborhood": "n1",
+            "neighborhood": "n1",  # default
             "subfolder": image_path_,
         }
         box_props = {
@@ -146,7 +145,7 @@ def combine_resources(
 
         trajectories_out.append(trajectory)
 
-        for box_meta in props.get("box", []):
+        for box_meta in props.get("boxes", []):
             box = pixel2proportion(box_meta.get("boxes"))
 
             # check building parts
