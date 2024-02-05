@@ -94,6 +94,9 @@ def combine_resources(
     for box in tqdm(csv_predictions_data, desc="group csv data"):
         fake_key = box.get("image_name")
         box["boxes"] = json.loads(box.get("boxes"))
+        box["boxes_float"] = json.loads(box.get("boxes_float", "[]"))
+        box["boxes_int"] = json.loads(box.get("boxes_int", "[]"))
+
         if not csv_groups.get(fake_key):
             csv_groups[fake_key] = []
         csv_groups[fake_key].append(box)
@@ -155,7 +158,9 @@ def combine_resources(
                     box_building_props["detection_boxes"].append(deepcopy(box))
                     box_building_props["detection_classes"].append(new_key)
                     # add logic for score
-                    box_building_props["detection_scores"].append(1)
+                    box_building_props["detection_scores"].append(
+                        float(box_meta.get("box_scores", "1"))
+                    )
 
             # else:
             #     new_key = BUILDING_PARTS.get(box_label)
