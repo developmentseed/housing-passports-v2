@@ -9,8 +9,8 @@ shpOut=$dataPrepared/shp_building
 
 mkdir -p $shpOut
 
-geokitpy="docker run --rm -v ${PWD}:/mnt/data developmentseed/geokit:python.latest"
-hpdev="docker run --rm -v ${PWD}:/mnt developmentseed/hpdev:v2"
+#geokitpy="docker run --rm -v ${PWD}:/mnt/data developmentseed/geokit:python.latest"
+#hpdev="docker run --rm -v ${PWD}:/mnt developmentseed/hpdev:v2"
 
 # ###################
 # download data
@@ -44,9 +44,8 @@ hpdev="docker run --rm -v ${PWD}:/mnt developmentseed/hpdev:v2"
 # process data
 # ###################
 
-$hpdev attach_data \
-  --annotation_properties_csv=$dataOut/properties.csv \
-  --annotation_parts_csv=$dataOut/parts.csv \
+attach_data \
+  --predictions_csv=$dataOut/all_predictions.csv \
   --original_geojson=$dataOut/map_points__pano_clip.geojson \
   --gpkg_buildings_file=$dataOut/bldgs_combined.gpkg \
   --prefix_path_images=$dataOut/images \

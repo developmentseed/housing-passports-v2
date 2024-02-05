@@ -39,11 +39,15 @@ def read_csv(image_csv_fpath):
     Returns:
         list: list  of elements
     """
+    try:
+        with open(image_csv_fpath, "r") as csvfile:
+            reader = csv.DictReader(csvfile, delimiter=",")
+            rows = list(reader)
+            return rows
+    except Exception as ex:
+        print("read_csv", ex)
+        return []
 
-    with open(image_csv_fpath, "r") as csvfile:
-        reader = csv.DictReader(csvfile, delimiter=",")
-        rows = list(reader)
-        return rows
 
 
 def write_dictlist2csv(output_file, list_features):
@@ -69,7 +73,7 @@ def write_json(output_file, dict_data):
         dict_data (list, dict): List of features
     """
     with open(output_file, "w") as f:
-        json.dump(dict_data, f)
+        json.dump(dict_data, f, indent=2)
 
 
 def write_pbtxt_content(output_file, items):

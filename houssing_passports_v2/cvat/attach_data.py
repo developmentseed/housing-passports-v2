@@ -1,6 +1,8 @@
 """
 Script for merge original data and detections
 """
+import json
+
 from utils.utils import (
     read_geojson,
     write_geojson,
@@ -25,16 +27,30 @@ from copy import deepcopy
 from shapely import wkb
 
 
-def pixel2proportion(box_meta_dict, x, y):
-    return round(
-        float(box_meta_dict.get(x, "")) / float(box_meta_dict.get(y, "")),
-        3,
-    )
+def pixel2proportion(box_values, w=1024, h=1024, r=3):
+    # x_min, y_min, x_max, y_max
+    return [
+        round(
+            (box_values[0] / w),
+            r,
+        ),
+        round(
+            (box_values[1] / h),
+            r,
+        ),
+        round(
+            (box_values[2] / w),
+            r,
+        ),
+        round(
+            (box_values[3] / h),
+            r,
+        ),
+    ]
 
 
 def combine_resources(
-    annotation_properties_csv,
-    annotation_parts_csv,
+    predictions_csv,
     original_geojson,
     gpkg_buildings_file,
     prefix_path_images,
@@ -54,8 +70,7 @@ def combine_resources(
     This function integrates the annotated cvat data in csv format, the original points and the buildings to combine and validate them.
 
     Parameters:
-    - annotation_properties_csv (str): Path CSV file containing annotation properties.
-    - annotation_parts_csv (str): Path CSV file containing annotation parts.
+    - predictions_csv (str): Path CSV file containing predictions csv.
     - original_geojson (str): Path GeoJSON points file.
     - gpkg_buildings_file (str): Path GeoPackage file with building data.
     - prefix_path_images (str): Prefix path for images.
@@ -72,24 +87,23 @@ def combine_resources(
     """
 
     features = read_geojson(original_geojson)
-    csv_data_props = read_csv(annotation_properties_csv)
-    csv_data_parts = read_csv(annotation_parts_csv)
+    csv_predictions_data = read_csv(predictions_csv)
 
-    list_data_annotation = [*csv_data_props, *csv_data_parts]
     df_polygons = gpd.read_file(gpkg_buildings_file)
     # group csv data
     csv_groups = {}
-    for box in tqdm(list_data_annotation, desc="join data"):
-        fake_key = f'{box["img_path"]}/{box["img_name"]}'
+    for box in tqdm(csv_predictions_data, desc="join data"):
+        fake_key = box.get("image_name")
+        box["boxes"] = json.loads(box.get("boxes"))
         if not csv_groups.get(fake_key):
             csv_groups[fake_key] = []
         csv_groups[fake_key].append(box)
 
     for feature in tqdm(features, desc="merge features"):
-        props = feature["properties"]
+        props = feature.get("properties")
         props["compass_angle_fix"] = compass_to_cartesian(props.get("compass_angle"))
         fake_key = "/".join(props.get("image_path", "").split("/")[-3:])
-        props["box"] = csv_groups.get(fake_key, [])
+        props["boxes"] = csv_groups.get(fake_key, [])
 
     write_geojson(geojson_merge_output, features)
     # housing_passports formats
@@ -102,7 +116,7 @@ def combine_resources(
         lng, lat = feature.get("geometry", {}).get("coordinates")
         path_seq = props.get("image_path", "").split("/")
         image_name = path_seq[-1]
-        if not props.get("box", []):
+        if not props.get("boxes", []):
             continue
         image_path_ = "/".join([prefix_path_images, *path_seq[-3:-1]])
         cam = IMAGE_SIDE.get(path_seq[-2], 0)
@@ -128,37 +142,30 @@ def combine_resources(
             "neighborhood": "n1",
         }
         box_building_props = deepcopy(box_props)
-        box_building_parts = deepcopy(box_props)
+        # box_building_parts = deepcopy(box_props)
 
         trajectories_out.append(trajectory)
 
         for box_meta in props.get("box", []):
-            box = [
-                pixel2proportion(box_meta, "box_xtl", "img_width"),
-                pixel2proportion(box_meta, "box_ytl", "img_height"),
-                pixel2proportion(box_meta, "box_xbr", "img_width"),
-                pixel2proportion(box_meta, "box_ybr", "img_height"),
-            ]
+            box = pixel2proportion(box_meta.get("boxes"))
 
-            box_label = box_meta.get("box_label")
-            if not box_label:
-                continue
-            if box_label == "building_properties":
-                for prop_key in BUILDING_PROPERTIES_BOX_CVAT:
-                    if box_meta.get(prop_key):
-                        new_key = BUILDING_PROPS.get(box_meta.get(prop_key))
-                        box_building_props["detection_boxes"].append(deepcopy(box))
-                        box_building_props["detection_classes"].append(new_key)
-                        box_building_props["detection_scores"].append(1)
+            # check building parts
+            for prop_key in BUILDING_PROPS_DICT.keys():
+                if box_meta.get(prop_key):
+                    new_key = BUILDING_PROPS.get(box_meta.get(prop_key))
+                    box_building_props["detection_boxes"].append(deepcopy(box))
+                    box_building_props["detection_classes"].append(new_key)
+                    # add logic for score
+                    box_building_props["detection_scores"].append(1)
 
-            else:
-                new_key = BUILDING_PARTS.get(box_label)
-                box_building_parts["detection_boxes"].append(deepcopy(box))
-                box_building_parts["detection_classes"].append(new_key)
-                box_building_parts["detection_scores"].append(1)
+            # else:
+            #     new_key = BUILDING_PARTS.get(box_label)
+            #     box_building_parts["detection_boxes"].append(deepcopy(box))
+            #     box_building_parts["detection_classes"].append(new_key)
+            #     box_building_parts["detection_scores"].append(1)
 
         building_props_out.append(deepcopy(box_building_props))
-        building_parts_out.append(deepcopy(box_building_parts))
+        # building_parts_out.append(deepcopy(box_building_parts))
 
     # write_json(BUILDING_PROPS, )
     # write files
