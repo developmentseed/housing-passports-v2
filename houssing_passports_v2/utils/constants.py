@@ -1,13 +1,5 @@
 from utils.utils import dic2d2dict
 
-BUILDING_PROPERTIES_BOX_CVAT = [
-    "use",
-    "material",
-    "security",
-    "condition",
-    "complete",
-]
-
 BUILDING_PROPS_DICT = {
     "material": {
         "brick_or_cement-concrete_block": 1,
