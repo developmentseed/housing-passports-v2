@@ -66,10 +66,11 @@ def print_classification_reports(categories):
         )
 
 
-def main(ckpt_path):
+def main(ckpt_path, focus_class, img_dir, data_dir):
     dm = HouseDataModule(
-        img_dir="notebooks/output/images_clipped_buffered/",
-        data_dir="data/intermediate",
+        img_dir=img_dir,
+        data_dir=data_dir,
+        focus_class=focus_class,
         batch_size=16,
         num_workers=1,
     )
@@ -84,7 +85,10 @@ def main(ckpt_path):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python script.py <CHECKPOINT_PATH>")
+        print("Usage: python evaluate.py <CHECKPOINT_PATH> <FOCUS_CLASS> <IMG_DIR> <DATA_DIR>")
         sys.exit(1)
     CKPT_PATH = sys.argv[1]
-    main(CKPT_PATH)
+    FOCUS_CLASS = sys.argv[2]
+    IMG_DIR = sys.argv[3]
+    DATA_DIR = sys.argv[4] # where the partitioned csvs are
+    main(CKPT_PATH, FOCUS_CLASS, IMG_DIR, DATA_DIR)

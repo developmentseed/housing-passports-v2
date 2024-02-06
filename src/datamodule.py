@@ -109,15 +109,17 @@ def resize_and_pad(target_width, target_height):
 
 
 class HouseDataModule(L.LightningDataModule):
-    def __init__(self, img_dir, data_dir, batch_size, num_workers):
+    def __init__(self, img_dir, data_dir, focus_class, batch_size, num_workers):
         self.img_dir = Path(img_dir)
         self.data_dir = Path(data_dir)
+        self.focus_class = focus_class
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.trn_tfm = v2.Compose(
             [
                 # resize_and_pad(224, 224),
-                v2.RandomResizedCrop(224, scale=(0.8, 1.2), antialias=True),
+                #v2.RandomResizedCrop(224, scale=(0.8, 1.2), antialias=True),
+                v2.RandomResizedCrop(512, scale=(0.8, 1.2), antialias=True),
                 v2.RandomHorizontalFlip(p=0.5),
                 v2.RandomAffine(
                     degrees=(0, 30),
@@ -131,7 +133,8 @@ class HouseDataModule(L.LightningDataModule):
         self.val_tfm = self.tst_tfm = v2.Compose(
             [
                 # resize_and_pad(224, 224),
-                v2.Resize((224, 224), antialias=True),
+                #v2.Resize((224, 224), antialias=True),
+                v2.Resize((512, 512), antialias=True),
                 v2.ToDtype(torch.float32, scale=True),
                 v2.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
             ]
@@ -139,8 +142,8 @@ class HouseDataModule(L.LightningDataModule):
 
     def setup(self, stage=None):
         if stage == "fit" or stage is None:
-            trn_df = pd.read_csv(self.data_dir / "train.csv")
-            val_df = pd.read_csv(self.data_dir / "valid.csv")
+            trn_df = pd.read_csv(self.data_dir / f"train_{self.focus_class}.csv")
+            val_df = pd.read_csv(self.data_dir / f"valid_{self.focus_class}.csv")
 
             self.trn_ds = HouseDataset(trn_df, self.img_dir, self.trn_tfm)
             self.trn_sampler = WeightedRandomSampler(
@@ -150,9 +153,15 @@ class HouseDataModule(L.LightningDataModule):
             )
 
             self.val_ds = HouseDataset(val_df, self.img_dir, self.val_tfm)
-        elif stage == "test" or stage is None:
-            tst_df = pd.read_csv(self.data_dir / "test.csv")
+            
+            tst_df = pd.read_csv(self.data_dir / f"test_{self.focus_class}.csv")
             self.tst_ds = HouseDataset(tst_df, self.img_dir, self.tst_tfm)
+            
+        
+        elif stage == "test" or stage is None:
+            tst_df = pd.read_csv(self.data_dir / f"test_{self.focus_class}.csv")
+            self.tst_ds = HouseDataset(tst_df, self.img_dir, self.tst_tfm)
+            #self.tst_ds = (self.data_dir, train=False)
         else:
             raise ValueError(f"Invalid stage: {stage}")
 
