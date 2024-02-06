@@ -1,35 +1,35 @@
 from utils.utils import dic2d2dict
 
 BUILDING_PROPS_DICT = {
-    "material": {
-        "brick_or_cement-concrete_block": 1,
-        "plaster": 2,
-        "wood_polished": 3,
-        "wood_crude-plank": 4,
-        "adobe": 5,
-        "corrugated_metal": 6,
-        "stone_with_mud-ashlar_with_lime_or_cement": 7,
-        "container-trailer": 8,
-        "mix-other-unclear": 9,
-    },
     "complete": {
-        "complete": 10,
-        "incomplete": 11,
-    },
-    "use": {
-        "residential": 12,
-        "mixed": 13,
-        "commercial": 14,
-        "critical_infrastructure": 15,
-    },
-    "security": {
-        "unsecured": 16,
-        "secured": 17,
+        "complete": 1,
+        "incomplete": 2,
     },
     "condition": {
-        "fair": 18,
-        "poor": 19,
-        "good": 20,
+        "poor": 3,
+        "fair": 4,
+        "good": 5,
+    },
+    "material": {
+        "mix-other-unclear": 6,
+        "brick_or_cement-concrete_block": 7,
+        "wood_polished": 8,
+        "stone_with_mud-ashlar_with_lime_or_cement": 9,
+        "corrugated_metal": 10,
+        "wood_crude-plank": 11,
+        "container-trailer": 12,
+        "plaster": 19,
+        "adobe": 20,
+    },
+    "security": {
+        "secured": 13,
+        "unsecured": 14,
+    },
+    "use": {
+        "residential": 15,
+        "critical_infrastructure": 16,
+        "mixed": 17,
+        "commercial": 18,
     },
 }
 
