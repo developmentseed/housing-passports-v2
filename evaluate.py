@@ -66,10 +66,10 @@ def print_classification_reports(categories):
         )
 
 
-def main(ckpt_path, focus_class):
+def main(ckpt_path, focus_class, img_dir, data_dir):
     dm = HouseDataModule(
-        img_dir="/home/ubuntu/data/",
-        data_dir="/home/ubuntu/model/housing-passports-v2/data/intermediate",
+        img_dir=img_dir,
+        data_dir=data_dir,
         focus_class=focus_class,
         batch_size=16,
         num_workers=1,
@@ -89,4 +89,6 @@ if __name__ == "__main__":
         sys.exit(1)
     CKPT_PATH = sys.argv[1]
     focus_class = sys.argv[2]
-    main(CKPT_PATH, focus_class)
+    img_dir = sys.argv[3]
+    data_dir = sys.argv[4]
+    main(CKPT_PATH, focus_class, img_dir, data_dir)

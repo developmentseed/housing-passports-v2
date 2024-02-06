@@ -118,7 +118,8 @@ class HouseDataModule(L.LightningDataModule):
         self.trn_tfm = v2.Compose(
             [
                 # resize_and_pad(224, 224),
-                v2.RandomResizedCrop(224, scale=(0.8, 1.2), antialias=True),
+                #v2.RandomResizedCrop(224, scale=(0.8, 1.2), antialias=True),
+                v2.RandomResizedCrop(512, scale=(0.8, 1.2), antialias=True),
                 v2.RandomHorizontalFlip(p=0.5),
                 v2.RandomAffine(
                     degrees=(0, 30),
@@ -132,7 +133,8 @@ class HouseDataModule(L.LightningDataModule):
         self.val_tfm = self.tst_tfm = v2.Compose(
             [
                 # resize_and_pad(224, 224),
-                v2.Resize((224, 224), antialias=True),
+                #v2.Resize((224, 224), antialias=True),
+                v2.Resize((512, 512), antialias=True),
                 v2.ToDtype(torch.float32, scale=True),
                 v2.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
             ]
@@ -154,10 +156,12 @@ class HouseDataModule(L.LightningDataModule):
             
             tst_df = pd.read_csv(self.data_dir / f"test_{self.focus_class}.csv")
             self.tst_ds = HouseDataset(tst_df, self.img_dir, self.tst_tfm)
+            
         
         elif stage == "test" or stage is None:
             tst_df = pd.read_csv(self.data_dir / f"test_{self.focus_class}.csv")
             self.tst_ds = HouseDataset(tst_df, self.img_dir, self.tst_tfm)
+            #self.tst_ds = (self.data_dir, train=False)
         else:
             raise ValueError(f"Invalid stage: {stage}")
 

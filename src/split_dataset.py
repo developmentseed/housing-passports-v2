@@ -3,17 +3,15 @@ import sys
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-def split_dataset(data_path, focus_class, random_state=42):
+def split_dataset(data_path, focus_class, output_path, random_state=42):
     """Splits dataset into train, valid & test set based on approximate stratified sampling."""
     df = pd.read_csv(data_path)
 
-    # List of possible strings
+    # Augmented image string identifiers
     augmented_strings = ['_0.jpg', '_1.jpg', '_2.jpg', '_3.jpg', '_4.jpg']
     
-    # Create a new DataFrame where column values contain any string from the list
+    # Separate the augmented images from the dataframe
     augmented_df = df[df['file_name'].apply(lambda x: any(substring in x for substring in augmented_strings))]
-    print(len(df), len(augmented_df))
-    print(augmented_df.file_name.head(1))
 
     # Remove augmented samples from the original dataframe
     df = df[~df['file_name'].isin(augmented_df['file_name'])]
@@ -26,6 +24,8 @@ def split_dataset(data_path, focus_class, random_state=42):
     augmented_df["feature"] = augmented_df[["complete", "condition", "security"]].apply(
         lambda x: "_".join(x.astype(str)), axis=1
     )
+
+    # Remove unnecessary column 
     df = df.drop(['Unnamed: 0'], axis=1)
     augmented_df = augmented_df.drop(['Unnamed: 0'], axis=1)
 
@@ -77,12 +77,12 @@ def split_dataset(data_path, focus_class, random_state=42):
         dataset.drop("feature", axis=1, inplace=True)
 
     # Save datasets
-    if not os.path.exists("/home/ubuntu/model/housing-passports-v2/data/intermediate"):
-        os.makedirs("/home/ubuntu/model/housing-passports-v2/data/intermediate")
-    train_df.to_csv(f"/home/ubuntu/model/housing-passports-v2/data/intermediate/train_{focus_class}.csv", index=False)
-    valid_df.to_csv(f"/home/ubuntu/model/housing-passports-v2/data/intermediate/valid_{focus_class}.csv", index=False)
-    test_df.to_csv(f"/home/ubuntu/model/housing-passports-v2/data/intermediate/test_{focus_class}.csv", index=False)
+    if not os.path.exists(f"{output_path}"):
+        os.makedirs(f"{output_path}")
+    train_df.to_csv(f"{output_path}/train_{focus_class}.csv", index=False)
+    valid_df.to_csv(f"{output_path}/valid_{focus_class}.csv", index=False)
+    test_df.to_csv(f"{output_path}/test_{focus_class}.csv", index=False)
 
 
 if __name__ == "__main__":
-    split_dataset(sys.argv[1], sys.argv[2])
+    split_dataset(sys.argv[1], sys.argv[2], sys.argv[3])
