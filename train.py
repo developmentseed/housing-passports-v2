@@ -70,4 +70,12 @@ def main(name, focus_class, img_dir, data_dir):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
+    if len(sys.argv) < 2:
+        print("Usage: python train.py <EXPERIMENT_NAME> <FOCUS_CLASS> <IMG_DIR> <DATA_DIR>")
+        sys.exit(1)
+    EXPERIMENT_NAME = sys.argv[1]
+    FOCUS_CLASS = sys.argv[2]
+    IMG_DIR = sys.argv[3]
+    DATA_DIR = sys.argv[4] # where the partitioned csvs are
+    main(EXPERIMENT_NAME, FOCUS_CLASS, IMG_DIR, DATA_DIR)
+

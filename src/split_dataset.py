@@ -85,4 +85,11 @@ def split_dataset(data_path, focus_class, output_path, random_state=42):
 
 
 if __name__ == "__main__":
-    split_dataset(sys.argv[1], sys.argv[2], sys.argv[3])
+    if len(sys.argv) < 2:
+        print("Usage: python split_dataset.py <CSV_PATH> <FOCUS_CLASS> <OUTPUT_PATH>")
+        sys.exit(1)
+    CSV_PATH = sys.argv[1] # where the un-partitioned csv is
+    FOCUS_CLASS = sys.argv[2]
+    OUTPUT_PATH = sys.argv[3]
+    split_dataset(CSV_PATH, FOCUS_CLASS, OUTPUT_PATH)
+

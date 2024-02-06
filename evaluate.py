@@ -85,10 +85,10 @@ def main(ckpt_path, focus_class, img_dir, data_dir):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python script.py <CHECKPOINT_PATH>")
+        print("Usage: python evaluate.py <CHECKPOINT_PATH> <FOCUS_CLASS> <IMG_DIR> <DATA_DIR>")
         sys.exit(1)
     CKPT_PATH = sys.argv[1]
-    focus_class = sys.argv[2]
-    img_dir = sys.argv[3]
-    data_dir = sys.argv[4]
-    main(CKPT_PATH, focus_class, img_dir, data_dir)
+    FOCUS_CLASS = sys.argv[2]
+    IMG_DIR = sys.argv[3]
+    DATA_DIR = sys.argv[4] # where the partitioned csvs are
+    main(CKPT_PATH, FOCUS_CLASS, IMG_DIR, DATA_DIR)
