@@ -118,8 +118,7 @@ def combine_resources(
         lng, lat = feature.get("geometry", {}).get("coordinates")
         path_seq = props.get("image_path", "").split("/")
         image_name = path_seq[-1]
-        if not props.get("boxes", []):
-            continue
+
         image_path_ = "/".join([prefix_path_images, *path_seq[-3:-1]])
         cam = IMAGE_SIDE.get(path_seq[-2], 0)
         frame = image_name.split(".")[0]
