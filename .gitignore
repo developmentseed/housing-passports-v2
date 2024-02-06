@@ -166,5 +166,3 @@ data/
 *_outputs.geojson
 data-scripts/fixtures/*outputs*.geojson
 
-data/*
-.idea/
