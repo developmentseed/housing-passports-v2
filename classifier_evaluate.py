@@ -85,7 +85,7 @@ def main(ckpt_path, focus_class, img_dir, data_dir):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python evaluate.py <CHECKPOINT_PATH> <FOCUS_CLASS> <IMG_DIR> <DATA_DIR>")
+        print("Usage: python classifier_evaluate.py <CHECKPOINT_PATH> <FOCUS_CLASS> <IMG_DIR> <DATA_DIR>")
         sys.exit(1)
     CKPT_PATH = sys.argv[1]
     FOCUS_CLASS = sys.argv[2]
