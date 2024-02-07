@@ -71,7 +71,7 @@ def main(name, focus_class, img_dir, data_dir):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python train.py <EXPERIMENT_NAME> <FOCUS_CLASS> <IMG_DIR> <DATA_DIR>")
+        print("Usage: python classifier_train.py <EXPERIMENT_NAME> <FOCUS_CLASS> <IMG_DIR> <DATA_DIR>")
         sys.exit(1)
     EXPERIMENT_NAME = sys.argv[1]
     FOCUS_CLASS = sys.argv[2]
