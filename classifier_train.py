@@ -10,7 +10,7 @@ from src.callbacks import BackboneFreezeUnfreeze
 L.seed_everything(42, workers=True)
 
 
-def main(name, focus_class, img_dir, data_dir):
+def main(name, img_dir, data_dir):
     logger = AimLogger(
         experiment=name,
         train_metric_prefix="train_",
@@ -20,7 +20,6 @@ def main(name, focus_class, img_dir, data_dir):
     dm = HouseDataModule(
         img_dir=img_dir,
         data_dir=data_dir,
-        focus_class=focus_class,
         batch_size=32, # 128,
         num_workers=8,
     )
@@ -71,11 +70,10 @@ def main(name, focus_class, img_dir, data_dir):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python classifier_train.py <EXPERIMENT_NAME> <FOCUS_CLASS> <IMG_DIR> <DATA_DIR>")
+        print("Usage: python classifier_train.py <EXPERIMENT_NAME> <IMG_DIR> <DATA_DIR>")
         sys.exit(1)
     EXPERIMENT_NAME = sys.argv[1]
-    FOCUS_CLASS = sys.argv[2]
-    IMG_DIR = sys.argv[3]
-    DATA_DIR = sys.argv[4] # where the partitioned csvs are
-    main(EXPERIMENT_NAME, FOCUS_CLASS, IMG_DIR, DATA_DIR)
+    IMG_DIR = sys.argv[2]
+    DATA_DIR = sys.argv[3] # where the partitioned csvs are
+    main(EXPERIMENT_NAME, IMG_DIR, DATA_DIR)
 
