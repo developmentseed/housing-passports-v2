@@ -35,7 +35,7 @@ def main(annotations_dir, images_dir):
     cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-Detection/retinanet_R_50_FPN_3x.yaml")
     cfg.SOLVER.IMS_PER_BATCH = 2
     cfg.SOLVER.BASE_LR = 0.00025
-    cfg.SOLVER.MAX_ITER = 10000 
+    cfg.SOLVER.MAX_ITER = 50000 
     cfg.SOLVER.STEPS = []       
     cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = 512
     cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1 
@@ -50,8 +50,8 @@ def main(annotations_dir, images_dir):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python detector_train.py <IMG_DIR> <ANN_DIR>")
+        print("Usage: python detector_train.py <ANN_DIR> <IMG_DIR>")
         sys.exit(1)
-    IMG_DIR = sys.argv[1]
-    ANN_DIR = sys.argv[2] # where the COCO json annotations are
-    main(IMG_DIR, ANN_DIR)
+    ANN_DIR = sys.argv[1]
+    IMG_DIR = sys.argv[2] # where the COCO json annotations are
+    main(ANN_DIR, IMG_DIR)

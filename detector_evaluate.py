@@ -182,9 +182,9 @@ if __name__ == "__main__":
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python detector_evaluate.py <IMG_DIR> <ANN_DIR> <CHECKPOINT_PATH>")
+        print("Usage: python detector_evaluate.py <ANN_DIR> <IMG_DIR> <CPKT_PATH>")
         sys.exit(1)
-    IMG_DIR = sys.argv[1]
-    ANN_DIR = sys.argv[2] # where the COCO json annotations are
+    ANN_DIR = sys.argv[1] # where the COCO json annotations are
+    IMG_DIR = sys.argv[2]
     CPKT_PATH =  sys.argv[3]
-    main(IMG_DIR, ANN_DIR, CPKT_PATH)
+    main(ANN_DIR, IMG_DIR, CPKT_PATH)
