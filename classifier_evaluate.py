@@ -78,7 +78,7 @@ def main(ckpt_path, img_dir, data_dir):
     model = load_model(ckpt_path)
     model.to(model.device)  # Ensure model is on the correct device
 
-    categories = evaluate_model(model, dm.val_dataloader, model.device)
+    categories = evaluate_model(model, dm.test_dataloader, model.device)
     print_classification_reports(categories)
 
 
