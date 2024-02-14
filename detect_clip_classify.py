@@ -215,7 +215,7 @@ def main(images_dir, detector_cpkt_path, classification_ckpt_path, output_dir):
     
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python detect_classify_clip.py <IMG_DIR> <DET_CPKT_PATH> <CLASS_CPKT_PATH> <OUTPUT_DIR>")
+        print("Usage: python detect_clip_classify.py <IMG_DIR> <DET_CPKT_PATH> <CLASS_CPKT_PATH> <OUTPUT_DIR>")
         sys.exit(1)
     IMG_DIR = sys.argv[1]
     DET_CPKT_PATH = sys.argv[2]
