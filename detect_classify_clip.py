@@ -202,15 +202,23 @@ def main(images_dir, detector_cpkt_path, classification_ckpt_path, output_dir):
                 
     df_out = pd.DataFrame(cumulative_predictions)
     # Convert tensor scores to float
-    df_out['box_scores'] = df_out['box_scores'].apply(extract_float)
+    #df_out['box_scores'] = df_out['box_scores'].apply(extract_float)
 
     # Convert tensor boxes to float
-    df_out['boxes_float'] = df_out['boxes'].apply(ast.literal_eval)
+    #df_out['boxes_float'] = df_out['boxes'].apply(ast.literal_eval)
 
     # Convert float boxes to int
-    df_out['boxes_int'] = df_out['boxes_float'].apply(lambda x: [int(elem) for elem in x])
+    #df_out['boxes_int'] = df_out['boxes_float'].apply(lambda x: [int(elem) for elem in x])
 
     df_out.to_csv(os.path.join(output_dir, f"detection_classification_predictions.csv"))
 
+    
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
+    if len(sys.argv) < 2:
+        print("Usage: python detect_classify_clip.py <IMG_DIR> <DET_CPKT_PATH> <CLASS_CPKT_PATH> <OUTPUT_DIR>")
+        sys.exit(1)
+    IMG_DIR = sys.argv[1]
+    DET_CPKT_PATH = sys.argv[2]
+    CLASS_CPKT_PATH =  sys.argv[3]
+    OUTPUT_DIR = sys.argv[4]
+    main(IMG_DIR, DET_CPKT_PATH, CLASS_CPKT_PATH, OUTPUT_DIR)

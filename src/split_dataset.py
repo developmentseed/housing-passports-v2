@@ -3,7 +3,7 @@ import sys
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-def split_dataset(data_path, focus_class, output_path, random_state=42):
+def split_dataset(data_path, output_path, random_state=42):
     """Splits dataset into train, valid & test set based on approximate stratified sampling."""
     df = pd.read_csv(data_path)
 
