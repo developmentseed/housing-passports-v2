@@ -6,4 +6,6 @@ chapters:
   - file: docs/classifier_train.ipynb
   - file: docs/classifier_evaluate.ipynb
   - file: docs/detect_classify_clip.ipynb
+  - file: docs/demo_ml.ipynb
+  - file: docs/triangulation.ipynb
   - file: docs/appendix
