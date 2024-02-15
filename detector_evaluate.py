@@ -175,7 +175,7 @@ def main(annotations_dir, images_dir, cpkt_path):
     # Calculate the mean along the stacked dimension
     average_iou = torch.mean(stacked_ious, dim=0)
     
-    print("mIoU: ", average_iou)
+    #print("mIoU: ", average_iou)
 
 if __name__ == "__main__":
     main(sys.argv[1], sys.argv[2], sys.argv[3])
