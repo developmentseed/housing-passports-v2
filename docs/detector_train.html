@@ -461,7 +461,7 @@ document.write(`
 </section>
 <section id="architecture">
 <h2>Architecture<a class="headerlink" href="#architecture" title="Permalink to this heading">#</a></h2>
-<p>We have implemented the <code class="docutils literal notranslate"><span class="pre">RetinaNet_R_50_FPN_3x</span></code> architecture supplied in Detectron2’s model zoo. RetinaNet is a popular single-stage object detection architecture introduced by Facebook AI Research. It is designed to address the problem of class imbalance in object detection by introducing a novel focal loss function, which focuses training on hard examples. RetinaNet uses a single convolutional neural network (CNN) to simultaneously predict object bounding boxes and their corresponding class probabilities. This variant of the implements a ResNet-50 backbone network. ResNet-50 is a convolutional neural network architecture that consists of 50 layers. It is a popular choice for many computer vision tasks due to its balance between model complexity and computational efficiency.</p>
+<p>We have implemented the <code class="docutils literal notranslate"><span class="pre">RetinaNet_R_50_FPN_3x</span></code> architecture supplied in Detectron2’s model zoo. RetinaNet is a popular single-stage object detection architecture introduced by Facebook AI Research. It is designed to address the problem of class imbalance in object detection by introducing a novel focal loss function, which focuses training on hard examples. RetinaNet uses a single convolutional neural network (CNN) to simultaneously predict object bounding boxes and their corresponding class probabilities. This variant implements a ResNet-50 backbone network. ResNet-50 is a convolutional neural network architecture that consists of 50 layers. It is a popular choice for many computer vision tasks due to its balance between model complexity and computational efficiency.</p>
 <p>FPN stands for Feature Pyramid Network, which is a type of architecture used to build feature pyramids in convolutional neural networks. FPN enhances the ability of the network to detect objects at different scales by combining features from multiple levels of the network hierarchy. It achieves this by adding lateral connections and upsampling layers to produce a set of feature maps at different resolutions.</p>
 <p>This variant’s backbone was trained for three times the default number of iterations (hence the 3x), which typically results in better performance at the cost of longer training time.</p>
 </section>
@@ -473,8 +473,8 @@ The loss curve for the final detection model.</p>
 </section>
 <section id="dataset-prep">
 <h2>Dataset prep<a class="headerlink" href="#dataset-prep" title="Permalink to this heading">#</a></h2>
-<p>To train the mode, we combined the left and right side images into a single COCO annotation files from <code class="docutils literal notranslate"><span class="pre">s3://hp-deliverables-v2/coco_format_12_4/</span></code>, shuffled the combined annotation file and partitioned that into training, validation and testing splits using a 70 percent, 20 percent and 10 percent ratio, respectively. The results of this were 3 COCO annotation files, one for each partition.</p>
-<p>You can find this partitioned data here: <code class="docutils literal notranslate"><span class="pre">s3://hp-deliverables-v2/partitions/</span></code>.</p>
+<p>To train the model, we combined the left and right side images into a single COCO annotation files from <code class="docutils literal notranslate"><span class="pre">s3://hp-deliverables-v2/coco_format_12_4/</span></code>, shuffled the combined annotation file and partitioned that into training, validation and testing splits using a 70 percent, 20 percent and 10 percent ratio, respectively. The results of this were 3 COCO annotation files, one for each partition.</p>
+<p>You can find the partitioned data here: <code class="docutils literal notranslate"><span class="pre">s3://hp-deliverables-v2/partitions/</span></code>.</p>
 </section>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h2>
@@ -543,6 +543,10 @@ The loss curve for the final detection model.</p>
 <li><p>Replace <code class="docutils literal notranslate"><span class="pre">ANN_DIR</span></code> with the path to the directory containing COCO-formatted JSON annotations.</p></li>
 <li><p>Replace <code class="docutils literal notranslate"><span class="pre">IMG_DIR</span></code> with the path to the directory containing images.</p></li>
 </ul>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">detector_train</span><span class="o">.</span><span class="n">py</span> <span class="n">coco</span><span class="o">/</span> <span class="n">mapillary_images</span><span class="o">/</span>
+</pre></div>
+</div>
 </li>
 <li><p><strong>Training:</strong> The script will initialize and train the Detectron2 model based on the provided dataset and configuration. The trained model will be saved in the output directory specified in the configuration. By default, this directory is <code class="docutils literal notranslate"><span class="pre">./output/</span></code>.</p></li>
 </ol>

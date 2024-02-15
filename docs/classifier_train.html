@@ -599,7 +599,9 @@ document.write(`
 <li><p><code class="docutils literal notranslate"><span class="pre">OUT_DIR</span></code>: Directory to write the “ground-truth-box-clipped-and-buffered” images to, along with the csv file containing annotations.</p></li>
 </ul>
 <p>Execute the script using the command:
-<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">classifier_train.py</span> <span class="pre">&lt;IMG_DIR&gt;</span> <span class="pre">&lt;ANN_JSON&gt;</span> <span class="pre">&lt;SIDE&gt;</span> <span class="pre">&lt;OUT_DIR&gt;</span></code></p>
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">prep_classifier_training_data.py</span> <span class="pre">&lt;IMG_DIR&gt;</span> <span class="pre">&lt;ANN_JSON&gt;</span> <span class="pre">&lt;SIDE&gt;</span> <span class="pre">&lt;OUT_DIR&gt;</span></code></p>
+<p>For example:
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">prep_classifier_training_data.py</span> <span class="pre">mapillary_images/</span> <span class="pre">coco/annotations/instances_default_left.json</span> <span class="pre">left</span> <span class="pre">clipped_images/</span></code></p>
 </li>
 <li><p><strong>Merge the left and right side csv files and add weights column</strong>:</p></li>
 </ol>
@@ -615,9 +617,21 @@ document.write(`
 <span class="n">prefix_to_add</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="c1"># Whatever the out_dir was e.g. &quot;clipped_images/&quot;</span>
 <span class="n">df_combined</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prefix_to_add</span> <span class="o">+</span> <span class="n">df_combined</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">]</span>
 <span class="n">df_combined</span><span class="p">[</span><span class="s2">&quot;weights&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">df_combined</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;data/raw/data_fixed.csv&quot;</span><span class="p">)</span>
+<span class="n">df_combined</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;data/raw/data.csv&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<ol class="arabic simple" start="3">
+<li><p>Now you’ll need to split <code class="docutils literal notranslate"><span class="pre">data.csv</span></code> into training, validation, and test partitions. We use stratified sampling to ensure that classes are evenly represented across the partitions. To do this, run <code class="docutils literal notranslate"><span class="pre">src/split_dataset.py</span></code>.</p></li>
+</ol>
+<p><strong>Command-Line Arguments</strong>: Specify the following command-line arguments:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CSV_PATH</span></code>: Directory containing the dataset images.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OUTPUT_PATH</span></code>: Directory to write the partitioned data to.</p></li>
+</ul>
+<p>Execute the script using the command:
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">src/split_dataset.py</span> <span class="pre">&lt;CSV_PATH&gt;</span> <span class="pre">&lt;OUTPUT_PATH&gt;</span></code></p>
+<p>For example:
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">src/split_dataset.py</span> <span class="pre">data/raw/data.csv</span> <span class="pre">data/intermediate/</span></code> which will output files named <code class="docutils literal notranslate"><span class="pre">train.csv</span></code>, <code class="docutils literal notranslate"><span class="pre">valid.csv</span></code> and <code class="docutils literal notranslate"><span class="pre">test.csv</span></code> in <code class="docutils literal notranslate"><span class="pre">data/intermediate/</span></code>.</p>
 </section>
 <section id="now-for-training">
 <h3>Now for training<a class="headerlink" href="#now-for-training" title="Permalink to this heading">#</a></h3>
@@ -634,16 +648,6 @@ document.write(`
 <li><p><code class="docutils literal notranslate"><span class="pre">LearningRateMonitor</span></code>: Monitors and logs the learning rate during training.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ModelCheckpoint</span></code>: Saves the best model based on validation performance.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">BackboneFreezeUnfreeze</span></code>: Unfreezes the model backbone after a certain epoch.</p></li>
-</ul>
-</li>
-<li><p>Initialize the Lightning Trainer with required configurations:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">devices</span></code>: Automatic device selection.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">accelerator</span></code>: Automatic accelerator selection.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">max_epochs</span></code>: Maximum number of training epochs.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">precision</span></code>: Mixed-precision training for improved efficiency.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">logger</span></code>: AIM logger for experiment tracking.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">callbacks</span></code>: List of callback functions.</p></li>
 </ul>
 </li>
 <li><p>Train the model using the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method with training and validation data loaders.</p>
@@ -671,6 +675,7 @@ document.write(`
 </ol>
 <p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">classifier_train.py</span> <span class="pre">&lt;EXPERIMENT_NAME&gt;</span> <span class="pre">&lt;IMG_DIR&gt;</span> <span class="pre">&lt;DATA_DIR&gt;</span></code></p>
 <p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;EXPERIMENT_NAME&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;IMG_DIR&gt;</span></code>, and <code class="docutils literal notranslate"><span class="pre">&lt;DATA_DIR&gt;</span></code> with the appropriate values.</p>
+<p>For example <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">classifier_train.py</span> <span class="pre">hp_classify_exp</span> <span class="pre">clipped_images/</span> <span class="pre">data/intermediate/</span></code></p>
 </section>
 </section>
 <section id="visual-display-of-training-data">
