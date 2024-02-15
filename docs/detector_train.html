@@ -1,0 +1,680 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Detection Model Training &#8212; Housing Passports v2</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'docs/detector_train';</script>
+    <link rel="shortcut icon" href="../_static/ds.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Detection Evaluation" href="detector_evaluate.html" />
+    <link rel="prev" title="Housing Passports V2: Dominica." href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/ds.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/ds.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Detection Model Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="detector_evaluate.html">Detection Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="classifier_train.html">Classifier Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="classifier_evaluate.html">Classifier Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="detect_classify_clip.html">Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demo_ml.html">Detection and classification demo workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="triangulation.html">Triangulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendix.html">Appendix</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/developmentseed/housing-passports-v2/main?urlpath=tree/docs/docs/detector_train.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/developmentseed/housing-passports-v2/blob/main/docs/docs/detector_train.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/developmentseed/housing-passports-v2" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/developmentseed/housing-passports-v2/edit/main/docs/docs/detector_train.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/developmentseed/housing-passports-v2/issues/new?title=Issue%20on%20page%20%2Fdocs/detector_train.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/docs/detector_train.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Detection Model Training</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-detectron2">What is Detectron2</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture">Architecture</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-prep">Dataset prep</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-set-up">Environment set-up</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-script">Training script</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#notable-functions">Notable functions</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#main-annotations-dir-images-dir"><code class="docutils literal notranslate"><span class="pre">main(annotations_dir,</span> <span class="pre">images_dir)</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-run">How to Run</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="detection-model-training">
+<h1>Detection Model Training<a class="headerlink" href="#detection-model-training" title="Permalink to this heading">#</a></h1>
+<p>For this project, we trained a Detectron2 model for object detection using <a class="reference external" href="https://cocodataset.org/#format-data">COCO-formatted</a> datasets.</p>
+<section id="what-is-detectron2">
+<h2>What is Detectron2<a class="headerlink" href="#what-is-detectron2" title="Permalink to this heading">#</a></h2>
+<p><a class="reference external" href="https://github.com/facebookresearch/detectron2">Detectron2</a> is a high-performance, flexible object detection library built by Facebook AI Research. It is a next-generation version of the original Detectron framework and provides a modular and extensible platform for implementing state-of-the-art object detection algorithms.</p>
+<p>Some key features and concepts in Detectron2:</p>
+<ul class="simple">
+<li><p>Modular Design: Detectron2 is designed with a modular architecture, allowing users to easily mix and match components to build custom object detection pipelines. It provides modular components for data loading, model building, training, and inference, making it highly flexible and customizable.</p></li>
+<li><p>State-of-the-Art Models: Detectron2 includes implementations of a wide range of state-of-the-art object detection models, including Faster R-CNN, Mask R-CNN, and RetinaNet, among others. These models are pre-trained on large-scale datasets such as COCO and can be fine-tuned on custom datasets.</p></li>
+<li><p>Efficient Training and Inference: Detectron2 is optimized for both training and inference performance. It supports distributed training across multiple GPUs and can efficiently utilize hardware accelerators such as NVIDIA GPUs. Additionally, it provides highly optimized inference code for fast and efficient object detection.</p></li>
+<li><p>Flexible Configuration: Detectron2 uses a configuration system based on YAML files to specify model configurations and training parameters. This allows users to easily customize various aspects of the training process, such as model architecture, input size, learning rate schedule, and data augmentation techniques.</p></li>
+<li><p>Rich Dataset Handling: Detectron2 provides built-in support for popular object detection datasets such as COCO, Pascal VOC, and Cityscapes. It includes data loaders and utilities for handling these datasets, making it easy to train and evaluate models on different datasets.</p></li>
+<li><p>Active Development Community: Detectron2 is actively developed and maintained by Facebook AI Research, with contributions from the open-source community. It is released under the Apache License 2.0, allowing users to freely use, modify, and distribute the code.</p></li>
+</ul>
+<p>Overall, Detectron2 is a powerful and versatile framework for building and deploying object detection models. Its modular design, state-of-the-art models, and efficient implementation make it a popular choice for both research and production applications in computer vision.</p>
+</section>
+<section id="architecture">
+<h2>Architecture<a class="headerlink" href="#architecture" title="Permalink to this heading">#</a></h2>
+<p>We have implemented the <code class="docutils literal notranslate"><span class="pre">RetinaNet_R_50_FPN_3x</span></code> architecture supplied in Detectron2’s model zoo. RetinaNet is a popular single-stage object detection architecture introduced by Facebook AI Research. It is designed to address the problem of class imbalance in object detection by introducing a novel focal loss function, which focuses training on hard examples. RetinaNet uses a single convolutional neural network (CNN) to simultaneously predict object bounding boxes and their corresponding class probabilities. This variant of the implements a ResNet-50 backbone network. ResNet-50 is a convolutional neural network architecture that consists of 50 layers. It is a popular choice for many computer vision tasks due to its balance between model complexity and computational efficiency.</p>
+<p>FPN stands for Feature Pyramid Network, which is a type of architecture used to build feature pyramids in convolutional neural networks. FPN enhances the ability of the network to detect objects at different scales by combining features from multiple levels of the network hierarchy. It achieves this by adding lateral connections and upsampling layers to produce a set of feature maps at different resolutions.</p>
+<p>This variant’s backbone was trained for three times the default number of iterations (hence the 3x), which typically results in better performance at the cost of longer training time.</p>
+</section>
+<section id="hyperparameters">
+<h2>Hyperparameters<a class="headerlink" href="#hyperparameters" title="Permalink to this heading">#</a></h2>
+<p>We didn’t need to do a lot of hyperparameter tuning. A base learning rate of 0.00025, 50000 training iterations and a batch size of 2 worked out well enough on a single GPU. You’ll see these in the configuration details in the model training script.</p>
+<p><img alt="alt text" src="../_images/detection_loss_curve.png" />
+The loss curve for the final detection model.</p>
+</section>
+<section id="dataset-prep">
+<h2>Dataset prep<a class="headerlink" href="#dataset-prep" title="Permalink to this heading">#</a></h2>
+<p>To train the mode, we combined the left and right side images into a single COCO annotation files from <code class="docutils literal notranslate"><span class="pre">s3://hp-deliverables-v2/coco_format_12_4/</span></code>, shuffled the combined annotation file and partitioned that into training, validation and testing splits using a 70 percent, 20 percent and 10 percent ratio, respectively. The results of this were 3 COCO annotation files, one for each partition.</p>
+<p>You can find this partitioned data here: <code class="docutils literal notranslate"><span class="pre">s3://hp-deliverables-v2/partitions/</span></code>.</p>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h2>
+<section id="environment-set-up">
+<h3>Environment set-up<a class="headerlink" href="#environment-set-up" title="Permalink to this heading">#</a></h3>
+<p>To train the models in this project, a <code class="docutils literal notranslate"><span class="pre">g5.2xlarge</span></code> (single <a class="reference external" href="https://aws.amazon.com/ec2/instance-types/g5/">NVIDIA A10G Tensor Core GPU</a>) machine based on the <code class="docutils literal notranslate"><span class="pre">Deep</span> <span class="pre">Learning</span> <span class="pre">OSS</span> <span class="pre">Nvidia</span> <span class="pre">Driver</span> <span class="pre">AMI</span> <span class="pre">GPU</span> <span class="pre">PyTorch</span> <span class="pre">2.1.0</span> <span class="pre">(Ubuntu</span> <span class="pre">20.04)</span> <span class="pre">20240116</span></code> AMI was set up. See more on this AMI at: <a class="reference external" href="https://docs.aws.amazon.com/dlami/latest/devguide/appendix-ami-release-notes.html">https://docs.aws.amazon.com/dlami/latest/devguide/appendix-ami-release-notes.html</a>. It is recommended to set up a machine with a similar runtime.</p>
+<p>From your local machine or virtual machine equipped with a GPU, run the following (requires a <a class="reference external" href="https://mamba.readthedocs.io/en/latest/index.html">mamba</a> installation):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mamba</span> <span class="n">init</span>
+<span class="n">source</span> <span class="o">~./</span><span class="n">bashrc</span>
+<span class="n">mamba</span> <span class="o">-</span><span class="n">n</span> <span class="n">env</span> <span class="n">hp</span> <span class="n">python</span><span class="o">=</span><span class="mf">3.10</span>
+<span class="n">mamba</span> <span class="n">activate</span> <span class="n">hp</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">torch</span><span class="o">==</span><span class="mf">2.1.1</span> <span class="n">torchvision</span><span class="o">==</span><span class="mf">0.16.1</span> <span class="o">--</span><span class="n">index</span><span class="o">-</span><span class="n">url</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">download</span><span class="o">.</span><span class="n">pytorch</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">whl</span><span class="o">/</span><span class="n">cu121</span>
+<span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="s1">&#39;git+https://github.com/facebookresearch/detectron2.git&#39;</span> 
+</pre></div>
+</div>
+<p>You can also install everything for the project by:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mamba</span> <span class="n">env</span> <span class="n">create</span> <span class="o">--</span><span class="n">file</span> <span class="n">environment</span><span class="o">.</span><span class="n">yml</span>
+<span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="s1">&#39;git+https://github.com/facebookresearch/detectron2.git&#39;</span>
+</pre></div>
+</div>
+<p>You should now have an environment called <code class="docutils literal notranslate"><span class="pre">hp</span></code> that has everything installed. Make sure you have a GPU available with versions compatible with the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nvcc</span><span class="p">:</span> <span class="n">NVIDIA</span> <span class="p">(</span><span class="n">R</span><span class="p">)</span> <span class="n">Cuda</span> <span class="n">compiler</span> <span class="n">driver</span>
+<span class="n">Copyright</span> <span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="mi">2005</span><span class="o">-</span><span class="mi">2023</span> <span class="n">NVIDIA</span> <span class="n">Corporation</span>
+<span class="n">Built</span> <span class="n">on</span> <span class="n">Mon_Apr__3_17</span><span class="p">:</span><span class="mi">16</span><span class="p">:</span><span class="mi">06</span><span class="n">_PDT_2023</span>
+<span class="n">Cuda</span> <span class="n">compilation</span> <span class="n">tools</span><span class="p">,</span> <span class="n">release</span> <span class="mf">12.1</span><span class="p">,</span> <span class="n">V12</span><span class="mf">.1.105</span>
+<span class="n">Build</span> <span class="n">cuda_12</span><span class="mf">.1</span><span class="o">.</span><span class="n">r12</span><span class="mf">.1</span><span class="o">/</span><span class="n">compiler</span><span class="mf">.32688072_0</span>
+<span class="n">torch</span><span class="p">:</span>  <span class="mf">2.1</span> <span class="p">;</span> <span class="n">cuda</span><span class="p">:</span>  <span class="n">cu121</span>
+<span class="n">detectron2</span><span class="p">:</span> <span class="mf">0.6</span>
+</pre></div>
+</div>
+</section>
+<section id="training-script">
+<h3>Training script<a class="headerlink" href="#training-script" title="Permalink to this heading">#</a></h3>
+<p>The training script <code class="docutils literal notranslate"><span class="pre">detector_train.py</span></code> performs the following tasks:</p>
+<ul class="simple">
+<li><p>Registers COCO-formatted datasets for training, validation, and testing.</p></li>
+<li><p>Sets up configuration details for the Detectron2 training experiment.</p></li>
+<li><p>Initializes and trains the model using the provided configuration.</p></li>
+</ul>
+<section id="notable-functions">
+<h4>Notable functions<a class="headerlink" href="#notable-functions" title="Permalink to this heading">#</a></h4>
+</section>
+<section id="main-annotations-dir-images-dir">
+<h4><code class="docutils literal notranslate"><span class="pre">main(annotations_dir,</span> <span class="pre">images_dir)</span></code><a class="headerlink" href="#main-annotations-dir-images-dir" title="Permalink to this heading">#</a></h4>
+<ul class="simple">
+<li><p><strong>Description:</strong> Main function for training a Detectron2 model.</p></li>
+<li><p><strong>Args:</strong></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">ANN_DIR</span> <span class="pre">(str)</span></code>: Directory containing COCO annotations.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IMG_DIR</span> <span class="pre">(str)</span></code>: Directory containing associated images.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="how-to-run">
+<h3>How to Run<a class="headerlink" href="#how-to-run" title="Permalink to this heading">#</a></h3>
+<ol class="arabic">
+<li><p><strong>Make sure the environment is set up, see “Setting up your environment”:</strong> Ensure you have Detectron2 and the other dependencies installed in your environment. Also make sure you have access to a single GPU for a training experiment.</p></li>
+<li><p><strong>Prepare Dataset:</strong> Make sure you have access to the COCO formatted JSON annotation files and corresponding images stored in a directory.</p></li>
+<li><p><strong>Run the Script:</strong> Execute the script with the annotations directory and images directory as command-line arguments:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>detector_train.py<span class="w"> </span>&lt;ANN_DIR&gt;<span class="w"> </span>&lt;IMG_DIR&gt;
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Replace <code class="docutils literal notranslate"><span class="pre">ANN_DIR</span></code> with the path to the directory containing COCO-formatted JSON annotations.</p></li>
+<li><p>Replace <code class="docutils literal notranslate"><span class="pre">IMG_DIR</span></code> with the path to the directory containing images.</p></li>
+</ul>
+</li>
+<li><p><strong>Training:</strong> The script will initialize and train the Detectron2 model based on the provided dataset and configuration. The trained model will be saved in the output directory specified in the configuration. By default, this directory is <code class="docutils literal notranslate"><span class="pre">./output/</span></code>.</p></li>
+</ol>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./docs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Housing Passports V2: <br> Dominica.</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="detector_evaluate.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Detection Evaluation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-detectron2">What is Detectron2</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture">Architecture</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-prep">Dataset prep</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-set-up">Environment set-up</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-script">Training script</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#notable-functions">Notable functions</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#main-annotations-dir-images-dir"><code class="docutils literal notranslate"><span class="pre">main(annotations_dir,</span> <span class="pre">images_dir)</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-run">How to Run</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Development Seed
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

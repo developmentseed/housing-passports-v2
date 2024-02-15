@@ -1,0 +1,816 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Classifier Training &#8212; Housing Passports v2</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'docs/classifier_train';</script>
+    <link rel="shortcut icon" href="../_static/ds.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Classifier Evaluation" href="classifier_evaluate.html" />
+    <link rel="prev" title="Detection Evaluation" href="detector_evaluate.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/ds.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/ds.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="detector_train.html">Detection Model Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="detector_evaluate.html">Detection Evaluation</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Classifier Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="classifier_evaluate.html">Classifier Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="detect_classify_clip.html">Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demo_ml.html">Detection and classification demo workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="triangulation.html">Triangulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendix.html">Appendix</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/developmentseed/housing-passports-v2/main?urlpath=tree/docs/docs/classifier_train.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/developmentseed/housing-passports-v2/blob/main/docs/docs/classifier_train.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/developmentseed/housing-passports-v2" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/developmentseed/housing-passports-v2/edit/main/docs/docs/classifier_train.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/developmentseed/housing-passports-v2/issues/new?title=Issue%20on%20page%20%2Fdocs/classifier_train.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/docs/classifier_train.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Classifier Training</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#convnext-v2-tiny">ConvNexT V2 Tiny</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#main-classifier-components">Main classifier components</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#class-imbalance">Class imbalance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-set-up">Environment set-up</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-the-data">Prepare the data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#now-for-training">Now for training</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#script-workflow">Script Workflow</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-run-training">How to run training</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-display-of-training-data">Visual display of training data</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="classifier-training">
+<h1>Classifier Training<a class="headerlink" href="#classifier-training" title="Permalink to this heading">#</a></h1>
+<p>For classification, we’ve implemented the tiny variant of the <code class="docutils literal notranslate"><span class="pre">ConvNeXtV2</span></code> architecture with a few tweaks.</p>
+<section id="convnext-v2-tiny">
+<h2>ConvNexT V2 Tiny<a class="headerlink" href="#convnext-v2-tiny" title="Permalink to this heading">#</a></h2>
+<p><a class="reference external" href="https://github.com/facebookresearch/ConvNeXt-V2">ConvNexT V2</a> Tiny is a fully convolutional neural network architecture designed for efficient image classification tasks. Here are the key points to understand about ConvNexT V2 Tiny:</p>
+<ol class="arabic simple">
+<li><p><strong>Architecture</strong>: ConvNexT V2 Tiny is a variant of the ConvNexT architecture, which is known for its efficient and effective design. It consists of a series of convolutional layers organized in a hierarchical structure with cross-stage feature aggregation (CSFA) modules combined with a masked auto-encoder. The masked auto-encoder enables the benefits of self-supervised learning.</p></li>
+<li><p><strong>Efficiency</strong>: ConvNexT V2 Tiny is designed to be lightweight and computationally efficient, making it suitable for deployment on resource-constrained devices such as mobile phones or edge devices.</p></li>
+<li><p><strong>Drop Path Regularization</strong>: The architecture includes drop path regularization, which randomly drops connections between layers during training to prevent overfitting and improve generalization performance.</p></li>
+<li><p><strong>Pretraining</strong>: ConvNexT V2 Tiny models are often pretrained on large-scale image datasets such as ImageNet to learn generic features before being fine-tuned on specific tasks.</p></li>
+<li><p><strong>Usage</strong>: ConvNexT V2 Tiny models can be used for various computer vision tasks, including image classification, object detection, and semantic segmentation. They provide a balance between model complexity and performance, making them suitable for real-world applications where computational resources are limited.</p></li>
+</ol>
+<p>Overall, ConvNexT V2 Tiny offers a lightweight and efficient solution for image classification tasks, making it a popular choice for applications where model size and computational efficiency are critical considerations.</p>
+<p>We’ve implemented this architecture for training a classifier model to predict building properties using <a class="reference external" href="https://lightning.ai/docs/pytorch/stable/">PyTorch Lightning</a>. It leverages the <a class="reference external" href="https://aimstack.io/">AIM (AI Model Tracking)</a> platform for experiment logging and monitoring.</p>
+</section>
+<section id="main-classifier-components">
+<h2>Main classifier components<a class="headerlink" href="#main-classifier-components" title="Permalink to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">classifier_train.py</span></code> script defines a PyTorch Lightning module called <code class="docutils literal notranslate"><span class="pre">HPClassifier</span></code>, which serves as a neural network model for a multi-class classification task.</p>
+<ol class="arabic simple" start="2">
+<li><p><strong>Model Architecture</strong>:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">HPClassifier</span></code> class inherits from <code class="docutils literal notranslate"><span class="pre">LightningModule</span></code> and defines the neural network architecture.</p></li>
+<li><p>The backbone of the model is based on the “convnextv2_tiny” architecture from the <a class="reference external" href="https://github.com/huggingface/pytorch-image-models">Timm library</a>, which is pretrained and includes drop path regularization.</p></li>
+<li><p>Separate classifier heads are defined for each building property (e.g., completeness, condition, material, security, use) using the <code class="docutils literal notranslate"><span class="pre">NormMlpClassifierHead</span></code> layer from Timm.</p></li>
+<li><p>Each classifier head predicts the corresponding property using the backbone features.</p></li>
+</ul>
+</li>
+<li><p><strong>Metrics</strong>:</p>
+<ul class="simple">
+<li><p>F1 Score: F1 score metrics are computed for each property using the <code class="docutils literal notranslate"><span class="pre">torchmetrics.F1Score</span></code> class.</p></li>
+</ul>
+</li>
+<li><p><strong>Optimizer and Scheduler</strong>:</p>
+<ul class="simple">
+<li><p>AdamW optimizer with a configurable learning rate (<code class="docutils literal notranslate"><span class="pre">lr</span></code>) is used. The base learning rate is set to 0.001.</p></li>
+<li><p>A MultiStepLR scheduler is employed to adjust the learning rate at predefined epochs.</p></li>
+</ul>
+</li>
+<li><p><strong>Loss Functions</strong>:</p>
+<ul class="simple">
+<li><p>Cross-entropy loss is used for each property prediction with class weights to handle class imbalance (see more on this below).</p></li>
+<li><p>Focal loss is commented out but can be used as an alternative loss function.</p></li>
+</ul>
+</li>
+<li><p><strong>Training, Validation, and Testing Steps</strong>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">training_step</span></code>, <code class="docutils literal notranslate"><span class="pre">validation_step</span></code>, and <code class="docutils literal notranslate"><span class="pre">test_step</span></code> methods define the forward pass and loss computation for training, validation, and testing phases, respectively.</p></li>
+<li><p>Losses and metrics are logged for monitoring the training progress using PyTorch Lightning logging utilities.</p></li>
+</ul>
+</li>
+<li><p><strong>Hyperparameters</strong>:</p>
+<ul class="simple">
+<li><p>Hyperparameters such as learning rate (<code class="docutils literal notranslate"><span class="pre">lr</span></code>) and the number of classes for each building property are configurable during model initialization. A maximum of 50 epochs was allowed for.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="class-imbalance">
+<h2>Class imbalance<a class="headerlink" href="#class-imbalance" title="Permalink to this heading">#</a></h2>
+<p>The following entails the relative percentages of class-wise representation in the dataset.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">complete</span>
+<span class="n">complete</span>      <span class="mf">83.713137</span>
+<span class="n">incomplete</span>    <span class="mf">16.286863</span>
+
+<span class="n">condition</span>
+<span class="n">fair</span>    <span class="mf">62.441354</span>
+<span class="n">poor</span>    <span class="mf">29.733579</span>
+<span class="n">good</span>     <span class="mf">7.825067</span>
+
+<span class="n">material</span>
+<span class="n">plaster</span>                                      <span class="mf">63.505362</span>
+<span class="n">mix</span><span class="o">-</span><span class="n">other</span><span class="o">-</span><span class="n">unclear</span>                            <span class="mf">23.927614</span>
+<span class="n">brick_or_cement</span><span class="o">-</span><span class="n">concrete_block</span>                <span class="mf">5.981903</span>
+<span class="n">wood_polished</span>                                 <span class="mf">4.205764</span>
+<span class="n">corrugated_metal</span>                              <span class="mf">1.105898</span>
+<span class="n">stone_with_mud</span><span class="o">-</span><span class="n">ashlar_with_lime_or_cement</span>     <span class="mf">0.561327</span>
+<span class="n">wood_crude</span><span class="o">-</span><span class="n">plank</span>                              <span class="mf">0.435657</span>
+<span class="n">container</span><span class="o">-</span><span class="n">trailer</span>                             <span class="mf">0.276475</span>
+
+<span class="n">security</span>
+<span class="n">unsecured</span>    <span class="mf">74.857574</span>
+<span class="n">secured</span>      <span class="mf">25.142426</span>
+
+<span class="n">use</span>
+<span class="n">residential</span>                <span class="mf">85.547922</span>
+<span class="n">commercial</span>                  <span class="mf">6.719169</span>
+<span class="n">mixed</span>                       <span class="mf">6.710791</span>
+<span class="n">critical_infrastructure</span>     <span class="mf">1.022118</span>
+</pre></div>
+</div>
+<p>We weight the losses per class as following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">complete</span>
+<span class="n">complete</span> <span class="o">=</span> <span class="mf">0.16</span>
+<span class="n">incomplete</span> <span class="o">=</span> <span class="mf">0.84</span>
+
+<span class="n">condition</span>
+<span class="n">poor</span> <span class="o">=</span> <span class="mf">0.19</span>
+<span class="n">fair</span> <span class="o">=</span> <span class="mf">0.09</span>
+<span class="n">good</span> <span class="o">=</span> <span class="mf">0.72</span>
+
+<span class="n">material</span>
+<span class="n">mix</span><span class="o">-</span><span class="n">other</span><span class="o">-</span><span class="n">unclear</span> <span class="o">=</span> <span class="mf">0.0046</span>
+<span class="n">plaster</span> <span class="o">=</span> <span class="mf">0.0017</span>
+<span class="n">brick_or_cement</span><span class="o">-</span><span class="n">concrete_block</span> <span class="o">=</span> <span class="mf">0.018</span>
+<span class="n">wood_polished</span> <span class="o">=</span> <span class="mf">0.026</span>
+<span class="n">stone_with_mud</span><span class="o">-</span><span class="n">ashlar_with_lime_or_cement</span> <span class="o">=</span> <span class="mf">0.196</span>
+<span class="n">corrugated_metal</span> <span class="o">=</span> <span class="mf">0.099</span>
+<span class="n">wood_crude</span><span class="o">-</span><span class="n">plank</span> <span class="o">=</span> <span class="mf">0.25</span>
+<span class="n">container</span><span class="o">-</span><span class="n">trailer</span> <span class="o">=</span> <span class="mf">0.39</span>
+
+<span class="n">security</span>
+<span class="n">secured</span> <span class="o">=</span> <span class="mf">0.75</span>
+<span class="n">unsecured</span> <span class="o">=</span> <span class="mf">0.25</span>
+
+<span class="n">use</span>
+<span class="n">residential</span> <span class="o">=</span> <span class="mf">0.009</span>
+<span class="n">critical_infrastructure</span>  <span class="o">=</span> <span class="mf">0.759</span>
+<span class="n">mixed</span> <span class="o">=</span> <span class="mf">0.115</span>
+<span class="n">commercial</span> <span class="o">=</span> <span class="mf">0.115</span>
+</pre></div>
+</div>
+<p>In doing so, we can force the model to learn from errors tied to the rare classes more than the popular classes.</p>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h2>
+<section id="environment-set-up">
+<h3>Environment set-up<a class="headerlink" href="#environment-set-up" title="Permalink to this heading">#</a></h3>
+<p>To train the models in this project, a <code class="docutils literal notranslate"><span class="pre">g5.2xlarge</span></code> (single <a class="reference external" href="https://aws.amazon.com/ec2/instance-types/g5/">NVIDIA A10G Tensor Core GPU</a>) machine based on the <code class="docutils literal notranslate"><span class="pre">Deep</span> <span class="pre">Learning</span> <span class="pre">OSS</span> <span class="pre">Nvidia</span> <span class="pre">Driver</span> <span class="pre">AMI</span> <span class="pre">GPU</span> <span class="pre">PyTorch</span> <span class="pre">2.1.0</span> <span class="pre">(Ubuntu</span> <span class="pre">20.04)</span> <span class="pre">20240116</span></code> AMI was set up. See more on this AMI at: <a class="reference external" href="https://docs.aws.amazon.com/dlami/latest/devguide/appendix-ami-release-notes.html">https://docs.aws.amazon.com/dlami/latest/devguide/appendix-ami-release-notes.html</a>. It is recommended to set up a machine with a similar runtime.</p>
+<p>If you haven’t done so already (for the detection training), from your local machine or virtual machine equipped with a GPU, run the following (requires a <a class="reference external" href="https://mamba.readthedocs.io/en/latest/index.html">mamba</a> installation):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mamba</span> <span class="n">env</span> <span class="n">create</span> <span class="o">--</span><span class="n">file</span> <span class="n">environment</span><span class="o">.</span><span class="n">yml</span>
+<span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="s1">&#39;git+https://github.com/facebookresearch/detectron2.git&#39;</span>
+</pre></div>
+</div>
+<p>You should now have an environment called <code class="docutils literal notranslate"><span class="pre">hp</span></code> that has everything installed. Make sure you have a GPU available with versions compatible with the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nvcc</span><span class="p">:</span> <span class="n">NVIDIA</span> <span class="p">(</span><span class="n">R</span><span class="p">)</span> <span class="n">Cuda</span> <span class="n">compiler</span> <span class="n">driver</span>
+<span class="n">Copyright</span> <span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="mi">2005</span><span class="o">-</span><span class="mi">2023</span> <span class="n">NVIDIA</span> <span class="n">Corporation</span>
+<span class="n">Built</span> <span class="n">on</span> <span class="n">Mon_Apr__3_17</span><span class="p">:</span><span class="mi">16</span><span class="p">:</span><span class="mi">06</span><span class="n">_PDT_2023</span>
+<span class="n">Cuda</span> <span class="n">compilation</span> <span class="n">tools</span><span class="p">,</span> <span class="n">release</span> <span class="mf">12.1</span><span class="p">,</span> <span class="n">V12</span><span class="mf">.1.105</span>
+<span class="n">Build</span> <span class="n">cuda_12</span><span class="mf">.1</span><span class="o">.</span><span class="n">r12</span><span class="mf">.1</span><span class="o">/</span><span class="n">compiler</span><span class="mf">.32688072_0</span>
+<span class="n">torch</span><span class="p">:</span>  <span class="mf">2.1</span> <span class="p">;</span> <span class="n">cuda</span><span class="p">:</span>  <span class="n">cu121</span>
+</pre></div>
+</div>
+</section>
+<section id="prepare-the-data">
+<h3>Prepare the data<a class="headerlink" href="#prepare-the-data" title="Permalink to this heading">#</a></h3>
+<p>Before training, run <code class="docutils literal notranslate"><span class="pre">prep_classifier_training_data.py</span></code> for both the left and right side annotation JSON files. This script take the annotations, clips the streetview images by the bounding boxes buffered with 100 pixels on each side (as dimensions and box placement permit) and writes the classes and filenames to a CSV file that will be used in the next step of the classification preparation. We tested a few different buffer sizes for clipping, and found that 100 pixels provides the best balance of focus to the subject building and beneficial surrounding context. Also, if you’re wondering why we are clipping the images by the boxes before classification, it is because some streetview images have more than one building and therefore more than one annotation associated with them.</p>
+<p>You can find the data we’ve already processed here: <code class="docutils literal notranslate"><span class="pre">s3://hp-deliverables-v2/classifier_data/final/</span></code></p>
+<ol class="arabic">
+<li><p><strong>Command-Line Arguments</strong>: Specify the following command-line arguments:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">IMG_DIR</span></code>: Directory containing the dataset images.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ANN_JSON</span></code>: The left or right side annotation JSON file.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SIDE</span></code>: The side, “left” or “right”</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OUT_DIR</span></code>: Directory to write the “ground-truth-box-clipped-and-buffered” images to, along with the csv file containing annotations.</p></li>
+</ul>
+<p>Execute the script using the command:
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">classifier_train.py</span> <span class="pre">&lt;IMG_DIR&gt;</span> <span class="pre">&lt;ANN_JSON&gt;</span> <span class="pre">&lt;SIDE&gt;</span> <span class="pre">&lt;OUT_DIR&gt;</span></code></p>
+</li>
+<li><p><strong>Merge the left and right side csv files and add weights column</strong>:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">df_right</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;/home/ubuntu/data/cumulative_annos_right.csv&quot;</span><span class="p">)</span>
+<span class="n">df_left</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;/home/ubuntu/data/cumulative_annos_left.csv&quot;</span><span class="p">)</span>
+
+<span class="n">df_combined</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df_right</span><span class="p">,</span> <span class="n">df_left</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df_combined</span><span class="p">[</span><span class="s2">&quot;file_name_original&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_combined</span><span class="p">[</span><span class="s2">&quot;file_name&quot;</span><span class="p">]</span>
+<span class="n">df_combined</span><span class="p">[</span><span class="s2">&quot;file_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_combined</span><span class="p">[</span><span class="s2">&quot;image_name_clip&quot;</span><span class="p">]</span>
+
+<span class="n">prefix_to_add</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="c1"># Whatever the out_dir was e.g. &quot;clipped_images/&quot;</span>
+<span class="n">df_combined</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prefix_to_add</span> <span class="o">+</span> <span class="n">df_combined</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">]</span>
+<span class="n">df_combined</span><span class="p">[</span><span class="s2">&quot;weights&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">df_combined</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;data/raw/data_fixed.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="now-for-training">
+<h3>Now for training<a class="headerlink" href="#now-for-training" title="Permalink to this heading">#</a></h3>
+<p>The script can be executed directly, taking command-line arguments for specifying experiment name, image directory, and data directory. It is designed to support a modular and configurable implementation of a neural network model for multi-class building property classification tasks, utilizing pre-trained backbone architectures and PyTorch Lightning for training and evaluation.</p>
+<section id="script-workflow">
+<h4>Script Workflow<a class="headerlink" href="#script-workflow" title="Permalink to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>Set seed for reproducibility using Lightning.</p></li>
+<li><p>Initialize an AIM logger for experiment tracking.</p></li>
+<li><p>Call our <code class="docutils literal notranslate"><span class="pre">HouseDataModule</span></code> object for data loading and preprocessing.</p></li>
+<li><p>Instantiate the <code class="docutils literal notranslate"><span class="pre">HPClassifier</span></code> model.</p></li>
+<li><p>Define callback functions:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LearningRateMonitor</span></code>: Monitors and logs the learning rate during training.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ModelCheckpoint</span></code>: Saves the best model based on validation performance.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BackboneFreezeUnfreeze</span></code>: Unfreezes the model backbone after a certain epoch.</p></li>
+</ul>
+</li>
+<li><p>Initialize the Lightning Trainer with required configurations:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">devices</span></code>: Automatic device selection.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">accelerator</span></code>: Automatic accelerator selection.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max_epochs</span></code>: Maximum number of training epochs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">precision</span></code>: Mixed-precision training for improved efficiency.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">logger</span></code>: AIM logger for experiment tracking.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">callbacks</span></code>: List of callback functions.</p></li>
+</ul>
+</li>
+<li><p>Train the model using the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method with training and validation data loaders.</p>
+<ul class="simple">
+<li><p>We unfreeze the backbone architecture after 10 epochs.</p></li>
+</ul>
+</li>
+</ol>
+<p>Here are the final model’s loss curve and F1 score curve:
+<img alt="alt text" src="../_images/lossclass.png" />
+<img alt="alt text" src="../_images/f1class.png" /></p>
+</section>
+<section id="how-to-run-training">
+<h4>How to run training<a class="headerlink" href="#how-to-run-training" title="Permalink to this heading">#</a></h4>
+<p>To run the script, follow these steps:</p>
+<ol class="arabic simple">
+<li><p><strong>Command-Line Arguments</strong>: Specify the following command-line arguments:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">EXPERIMENT_NAME</span></code>: Name of the training experiment.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IMG_DIR</span></code>: Directory containing the dataset images.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DATA_DIR</span></code>: Directory containing partitioned CSV files for the dataset.</p></li>
+</ul>
+</li>
+<li><p><strong>Run Script</strong>: Execute the script using the command:</p></li>
+</ol>
+<p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">classifier_train.py</span> <span class="pre">&lt;EXPERIMENT_NAME&gt;</span> <span class="pre">&lt;IMG_DIR&gt;</span> <span class="pre">&lt;DATA_DIR&gt;</span></code></p>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;EXPERIMENT_NAME&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;IMG_DIR&gt;</span></code>, and <code class="docutils literal notranslate"><span class="pre">&lt;DATA_DIR&gt;</span></code> with the appropriate values.</p>
+</section>
+</section>
+<section id="visual-display-of-training-data">
+<h3>Visual display of training data<a class="headerlink" href="#visual-display-of-training-data" title="Permalink to this heading">#</a></h3>
+<p>These are images clipped and buffered by the ground truth bounding box. The property labels are indicated in the caption.</p>
+<p><img alt="alt text" src="../_images/groundtruth_classifier_0.png" />
+<img alt="alt text" src="../_images/groundtruth_classifier_1.png" />
+<img alt="alt text" src="../_images/groundtruth_classifier_2.png" />
+<img alt="alt text" src="../_images/groundtruth_classifier_3.png" />
+<img alt="alt text" src="../_images/groundtruth_classifier_4.png" />
+<img alt="alt text" src="../_images/groundtruth_classifier_5.png" /></p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./docs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="detector_evaluate.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Detection Evaluation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="classifier_evaluate.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Classifier Evaluation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#convnext-v2-tiny">ConvNexT V2 Tiny</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#main-classifier-components">Main classifier components</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#class-imbalance">Class imbalance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-set-up">Environment set-up</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-the-data">Prepare the data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#now-for-training">Now for training</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#script-workflow">Script Workflow</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-run-training">How to run training</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-display-of-training-data">Visual display of training data</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Development Seed
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

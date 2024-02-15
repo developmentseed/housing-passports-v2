@@ -1,0 +1,1244 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Detection and classification demo workflow &#8212; Housing Passports v2</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'docs/demo_ml';</script>
+    <link rel="shortcut icon" href="../_static/ds.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Triangulation" href="triangulation.html" />
+    <link rel="prev" title="Inference" href="detect_classify_clip.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/ds.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/ds.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="detector_train.html">Detection Model Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="detector_evaluate.html">Detection Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="classifier_train.html">Classifier Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="classifier_evaluate.html">Classifier Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="detect_classify_clip.html">Inference</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Detection and classification demo workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="triangulation.html">Triangulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendix.html">Appendix</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/developmentseed/housing-passports-v2/main?urlpath=tree/docs/docs/demo_ml.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/developmentseed/housing-passports-v2/blob/main/docs/docs/demo_ml.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/developmentseed/housing-passports-v2" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/developmentseed/housing-passports-v2/edit/main/docs/docs/demo_ml.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/developmentseed/housing-passports-v2/issues/new?title=Issue%20on%20page%20%2Fdocs/demo_ml.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/docs/demo_ml.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Detection and classification demo workflow</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#set-up">Set up</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#check-some-images-and-labels">Check some images and labels</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-the-model">Load the model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#check-the-logs-of-the-trained-model">Check the logs of the trained model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-inference">Run inference</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-predictions-and-plot-them-on-some-subset-of-the-test-dataset">Generate predictions and plot them on some subset of the test dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualize-one-of-the-resulting-images">Visualize one of the resulting images</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-evaluation-of-the-trained-model-on-the-test-dataset">Run evaluation of the trained model on the test dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-detection-clipping-and-classification">Run detection, clipping and classification</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualize-some-results">Visualize some results</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#this-is-a-peek-into-what-the-predictions-csv-output-looks-like">This is a peek into what the predictions csv output looks like</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="detection-and-classification-demo-workflow">
+<h1>Detection and classification demo workflow<a class="headerlink" href="#detection-and-classification-demo-workflow" title="Permalink to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">shuffle</span>
+
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torchmetrics</span> <span class="kn">import</span> <span class="n">detection</span><span class="p">,</span> <span class="n">F1Score</span>
+<span class="kn">from</span> <span class="nn">detectron2</span> <span class="kn">import</span> <span class="n">model_zoo</span>
+<span class="kn">from</span> <span class="nn">detectron2.config</span> <span class="kn">import</span> <span class="n">get_cfg</span>
+<span class="kn">from</span> <span class="nn">detectron2.data</span> <span class="kn">import</span> <span class="n">MetadataCatalog</span><span class="p">,</span> <span class="n">DatasetCatalog</span>
+<span class="kn">from</span> <span class="nn">detectron2.data.datasets</span> <span class="kn">import</span> <span class="n">register_coco_instances</span>
+<span class="kn">from</span> <span class="nn">detectron2.engine</span> <span class="kn">import</span> <span class="n">DefaultPredictor</span>
+<span class="kn">from</span> <span class="nn">detectron2.engine.defaults</span> <span class="kn">import</span> <span class="n">DefaultPredictor</span>
+<span class="kn">from</span> <span class="nn">detectron2.utils.logger</span> <span class="kn">import</span> <span class="n">setup_logger</span>
+<span class="kn">from</span> <span class="nn">detectron2.utils.visualizer</span> <span class="kn">import</span> <span class="n">Visualizer</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">patches</span>
+<span class="kn">import</span> <span class="nn">rasterio</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">src.datamodule</span> <span class="kn">import</span> <span class="n">HouseDataModule</span>
+<span class="kn">from</span> <span class="nn">src.model</span> <span class="kn">import</span> <span class="n">HPClassifier</span>
+<span class="kn">from</span> <span class="nn">detect_clip_classify</span> <span class="kn">import</span> <span class="n">evaluate_classification_model</span><span class="p">,</span> <span class="n">clip_image_around_bbox_buffer</span><span class="p">,</span> <span class="n">load_classification_model</span>
+<span class="kn">from</span> <span class="nn">torchvision.transforms</span> <span class="kn">import</span> <span class="n">Compose</span><span class="p">,</span> <span class="n">Resize</span><span class="p">,</span> <span class="n">ToTensor</span><span class="p">,</span> <span class="n">Normalize</span><span class="p">,</span> <span class="n">ToPILImage</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span><span class="o">,</span> <span class="nn">detectron2</span>
+<span class="o">!</span>nvcc<span class="w"> </span>--version
+<span class="n">TORCH_VERSION</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">__version__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[:</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">CUDA_VERSION</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">__version__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;torch: &quot;</span><span class="p">,</span> <span class="n">TORCH_VERSION</span><span class="p">,</span> <span class="s2">&quot;; cuda: &quot;</span><span class="p">,</span> <span class="n">CUDA_VERSION</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;detectron2:&quot;</span><span class="p">,</span> <span class="n">detectron2</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2023 NVIDIA Corporation
+Built on Mon_Apr__3_17:16:06_PDT_2023
+Cuda compilation tools, release 12.1, V12.1.105
+Build cuda_12.1.r12.1/compiler.32688072_0
+torch:  2.1 ; cuda:  cu121
+detectron2: 0.6
+</pre></div>
+</div>
+</div>
+</div>
+<section id="set-up">
+<h2>Set up<a class="headerlink" href="#set-up" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_dir</span> <span class="o">=</span> <span class="s2">&quot;/home/ubuntu/data/&quot;</span>
+<span class="n">model_dir</span> <span class="o">=</span> <span class="s2">&quot;/home/ubuntu/model/&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Register the partitioned COCO datasets for building detection</span>
+<span class="n">register_coco_instances</span><span class="p">(</span><span class="s2">&quot;hp_train&quot;</span><span class="p">,</span> <span class="p">{},</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">coco/instances_default_train.json&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">mapillary_images&quot;</span><span class="p">)</span>
+<span class="n">register_coco_instances</span><span class="p">(</span><span class="s2">&quot;hp_val&quot;</span><span class="p">,</span> <span class="p">{},</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">coco/instances_default_val.json&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">mapillary_images&quot;</span><span class="p">)</span>
+<span class="n">register_coco_instances</span><span class="p">(</span><span class="s2">&quot;hp_test&quot;</span><span class="p">,</span> <span class="p">{},</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">coco/instances_default_test.json&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">mapillary_images&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Read the partitioned COCO datasets into dictionaries for later use</span>
+<span class="n">train_json</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">coco/instances_default_train.json&quot;</span><span class="p">)</span>
+<span class="n">train_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">train_json</span><span class="p">)</span>
+<span class="n">val_json</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">coco/instances_default_val.json&quot;</span><span class="p">)</span>
+<span class="n">val_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">val_json</span><span class="p">)</span>
+<span class="n">test_json</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">coco/instances_default_test.json&quot;</span><span class="p">)</span>
+<span class="n">test_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">test_json</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="check-some-images-and-labels">
+<h3>Check some images and labels<a class="headerlink" href="#check-some-images-and-labels" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">i</span><span class="o">=</span><span class="mi">0</span>
+<span class="k">for</span> <span class="n">gt</span> <span class="ow">in</span> <span class="n">train_json</span><span class="p">[</span><span class="s1">&#39;annotations&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">train_json</span><span class="p">[</span><span class="s1">&#39;images&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">gt</span><span class="p">[</span><span class="s1">&#39;image_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">im</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]:</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">mapillary_images/&quot;</span><span class="o">+</span><span class="n">im</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">])</span>
+            <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+            <span class="n">rect_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;rect_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="k">class</span> <span class="nc">Rectv</span><span class="p">:</span>
+                <span class="n">rect_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;rect_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">Rectv</span><span class="p">()</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">rect_name</span><span class="p">,</span> <span class="n">rect_name</span><span class="p">)</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">rect_name</span> <span class="o">=</span> <span class="n">patches</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">gt</span><span class="p">[</span><span class="s1">&#39;bbox&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">gt</span><span class="p">[</span><span class="s1">&#39;bbox&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]),</span>
+                <span class="n">gt</span><span class="p">[</span><span class="s1">&#39;bbox&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span>
+                <span class="n">gt</span><span class="p">[</span><span class="s1">&#39;bbox&#39;</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span>
+                <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span>
+                <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span>
+            <span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">rect_name</span><span class="p">)</span>
+            <span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span> 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/4a6a9c2dbdf33a160610566952992663dcc72bbb7688d0a1d62b33f2dac383ec.png" src="../_images/4a6a9c2dbdf33a160610566952992663dcc72bbb7688d0a1d62b33f2dac383ec.png" />
+<img alt="../_images/35eeeee90ee277a1c3ef0d7ff717975be548ade6f48888568f5997438b7e073a.png" src="../_images/35eeeee90ee277a1c3ef0d7ff717975be548ade6f48888568f5997438b7e073a.png" />
+<img alt="../_images/3a85b8b16dacffc8ca9bf076af107c9f3d90ed8fe65b926e1782eedeaa02a456.png" src="../_images/3a85b8b16dacffc8ca9bf076af107c9f3d90ed8fe65b926e1782eedeaa02a456.png" />
+<img alt="../_images/5e91023de95d8be78bf900f62e4d491c71527d4e39b41abf9d30572f686390f0.png" src="../_images/5e91023de95d8be78bf900f62e4d491c71527d4e39b41abf9d30572f686390f0.png" />
+<img alt="../_images/8782a8ee82ae90de16d2d3be55fd14ec06012c4c79d51c1e97e6e5c155302734.png" src="../_images/8782a8ee82ae90de16d2d3be55fd14ec06012c4c79d51c1e97e6e5c155302734.png" />
+<img alt="../_images/9ca198684b962f30a523d7cdbc6f7e8e00864b26862b9dbd3c5774bc6f54ae24.png" src="../_images/9ca198684b962f30a523d7cdbc6f7e8e00864b26862b9dbd3c5774bc6f54ae24.png" />
+<img alt="../_images/cb8c8d71b99ec5f1d45ec6bf98a35187107395311a51061737ff0c61a6b1a605.png" src="../_images/cb8c8d71b99ec5f1d45ec6bf98a35187107395311a51061737ff0c61a6b1a605.png" />
+<img alt="../_images/5f67164750b082f48b792da60717cf5c1485c9cf7b26802a5bcd488dca8ea430.png" src="../_images/5f67164750b082f48b792da60717cf5c1485c9cf7b26802a5bcd488dca8ea430.png" />
+<img alt="../_images/ee350dc1d8d1beabce9825861b24e5d06d5c3ecce4afaa80cf048c3ed80c6535.png" src="../_images/ee350dc1d8d1beabce9825861b24e5d06d5c3ecce4afaa80cf048c3ed80c6535.png" />
+<img alt="../_images/ba6643e6a8475b363ce318bf3c401348c849cb2350702a03b276810fb7501ea1.png" src="../_images/ba6643e6a8475b363ce318bf3c401348c849cb2350702a03b276810fb7501ea1.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="load-the-model">
+<h2>Load the model<a class="headerlink" href="#load-the-model" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">model_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">detector_cpkt_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">model_dir</span><span class="si">}</span><span class="s2">output/50kiter/model_final.pth&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set up configuration details for the Detectron2 training experiment</span>
+<span class="n">cfg</span> <span class="o">=</span> <span class="n">get_cfg</span><span class="p">()</span>
+<span class="n">cfg</span><span class="o">.</span><span class="n">merge_from_file</span><span class="p">(</span><span class="n">model_zoo</span><span class="o">.</span><span class="n">get_config_file</span><span class="p">(</span><span class="s2">&quot;COCO-Detection/retinanet_R_50_FPN_3x.yaml&quot;</span><span class="p">))</span> <span class="c1">#faster_rcnn_X_101_32x8d_FPN_3x.yaml&quot;))</span>
+<span class="n">cfg</span><span class="o">.</span><span class="n">MODEL</span><span class="o">.</span><span class="n">WEIGHTS</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">detector_cpkt_path</span><span class="p">)</span>
+<span class="n">cfg</span><span class="o">.</span><span class="n">SOLVER</span><span class="o">.</span><span class="n">IMS_PER_BATCH</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">cfg</span><span class="o">.</span><span class="n">MODEL</span><span class="o">.</span><span class="n">RETINANET</span><span class="o">.</span><span class="n">SCORE_THRESH_TEST</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">cfg</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">TEST</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;hp_test&quot;</span><span class="p">,)</span>
+<span class="n">predictor</span> <span class="o">=</span> <span class="n">DefaultPredictor</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="check-the-logs-of-the-trained-model">
+<h3>Check the logs of the trained model<a class="headerlink" href="#check-the-logs-of-the-trained-model" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Look at training curves in tensorboard:</span>
+<span class="o">%</span><span class="k">load_ext</span> tensorboard
+<span class="c1">#%reload_ext tensorboard</span>
+<span class="o">%</span><span class="k">tensorboard</span> --logdir output/50kiter/
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="run-inference">
+<h2>Run inference<a class="headerlink" href="#run-inference" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># In case we&#39;d like to store our test images with inferences plotted</span>
+<span class="n">inference_image_output</span> <span class="o">=</span> <span class="s2">&quot;./output/test_inference_images/&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">inference_image_output</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="generate-predictions-and-plot-them-on-some-subset-of-the-test-dataset">
+<h3>Generate predictions and plot them on some subset of the test dataset<a class="headerlink" href="#generate-predictions-and-plot-them-on-some-subset-of-the-test-dataset" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">outputs_test</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">gt</span> <span class="ow">in</span> <span class="n">test_json</span><span class="p">[</span><span class="s1">&#39;annotations&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]:</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">test_json</span><span class="p">[</span><span class="s1">&#39;images&#39;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">gt</span><span class="p">[</span><span class="s1">&#39;image_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]:</span>
+      <span class="n">im</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">mapillary_images/&quot;</span><span class="o">+</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">])</span>
+      <span class="n">outputs</span> <span class="o">=</span> <span class="n">predictor</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+      <span class="c1">#print(outputs[&quot;instances&quot;].pred_boxes)</span>
+      <span class="n">outputs_test</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
+      <span class="c1"># Use `Visualizer` to draw the predictions on the image.</span>
+      <span class="n">v</span> <span class="o">=</span> <span class="n">Visualizer</span><span class="p">(</span><span class="n">im</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">MetadataCatalog</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">DATASETS</span><span class="o">.</span><span class="n">TEST</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.2</span><span class="p">)</span>
+      <span class="n">out</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">draw_instance_predictions</span><span class="p">(</span><span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">))</span>
+      <span class="n">bb</span> <span class="o">=</span> <span class="n">gt</span><span class="p">[</span><span class="s1">&#39;bbox&#39;</span><span class="p">]</span>
+      <span class="n">bbxyxy</span> <span class="o">=</span> <span class="p">(</span><span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">bb</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">bb</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+      <span class="n">out</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">draw_box</span><span class="p">(</span><span class="n">box_coord</span> <span class="o">=</span> <span class="n">bbxyxy</span><span class="p">,</span> <span class="n">edge_color</span><span class="o">=</span><span class="s1">&#39;dodgerblue&#39;</span><span class="p">)</span>
+
+
+      <span class="n">pred_image</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">get_image</span><span class="p">()[:,</span> <span class="p">:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    
+      <span class="n">window_name</span> <span class="o">=</span> <span class="s2">&quot;prediction&quot;</span>
+    
+      <span class="c1"># Display the image using imshow</span>
+      <span class="c1">#cv2.imshow(window_name, pred_image)</span>
+      <span class="c1">#cv2.waitKey(0)</span>
+      <span class="c1">#cv2.destroyAllWindows()</span>
+      <span class="c1">#cv2.imshow(out.get_image()[:, :, ::-1])</span>
+      <span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">inference_image_output</span><span class="si">}{</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">get_image</span><span class="p">()[:,</span> <span class="p">:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+      <span class="c1">#print(&quot;written to &quot;, f&quot;{inference_image_output}{i[&#39;file_name&#39;].replace(&#39;/&#39;, &#39;_&#39;)}&quot;)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ls</span> <span class="o">./</span><span class="n">output</span><span class="o">/</span><span class="n">test_inference_images</span><span class="o">/</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="visualize-one-of-the-resulting-images">
+<h3>Visualize one of the resulting images<a class="headerlink" href="#visualize-one-of-the-resulting-images" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.image</span> <span class="k">as</span> <span class="nn">mpimg</span>
+
+<span class="c1"># Specify the path to your image</span>
+<span class="n">image_path</span> <span class="o">=</span> <span class="s1">&#39;./output/test_inference_images/r7tGTdge9ZQXVPAcNbiEnu_left_1966801483681588_left.jpg&#39;</span>
+
+<span class="c1"># Load the image using matplotlib.image.imread</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">mpimg</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
+
+<span class="c1"># Plot the image using matplotlib.pyplot.imshow</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7fd691df7280&gt;
+</pre></div>
+</div>
+<img alt="../_images/6b4ca6dc7fa9f711f1cb74f3f5ac13b3a1e3d9b6f8bd4a9b3dc58c16dce70213.png" src="../_images/6b4ca6dc7fa9f711f1cb74f3f5ac13b3a1e3d9b6f8bd4a9b3dc58c16dce70213.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="run-evaluation-of-the-trained-model-on-the-test-dataset">
+<h2>Run evaluation of the trained model on the test dataset<a class="headerlink" href="#run-evaluation-of-the-trained-model-on-the-test-dataset" title="Permalink to this heading">#</a></h2>
+<p>We’ll calculate mean average precision (mAP) as our score.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use the test dataset</span>
+<span class="n">dataset_name</span> <span class="o">=</span> <span class="s2">&quot;hp_test&quot;</span>
+
+<span class="c1"># Load metadata and dataset</span>
+<span class="n">metadata</span> <span class="o">=</span> <span class="n">MetadataCatalog</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">)</span>
+<span class="n">dataset_dicts</span> <span class="o">=</span> <span class="n">DatasetCatalog</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">)</span>
+
+<span class="c1"># Lists to store predicted and ground truth bounding boxes</span>
+<span class="n">outputs_test_preds</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">outputs_test_gt</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># Iterate over annotations in the test dataset</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">test_json</span><span class="p">[</span><span class="s1">&#39;annotations&#39;</span><span class="p">]:</span>
+    <span class="c1"># Get the image path from the test dataset</span>
+    <span class="n">image_path</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">test_json</span><span class="p">[</span><span class="s1">&#39;images&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;image_id&#39;</span><span class="p">]]</span>
+    
+    <span class="c1"># Read the image using OpenCV</span>
+    <span class="n">im</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">mapillary_images/</span><span class="si">{</span><span class="n">image_path</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Make predictions using the trained model</span>
+    <span class="n">outputs</span> <span class="o">=</span> <span class="n">predictor</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Get ground truth annotations for the current image</span>
+        <span class="n">annotations</span> <span class="o">=</span> <span class="n">dataset_dicts</span><span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;image_id&#39;</span><span class="p">]][</span><span class="s2">&quot;annotations&quot;</span><span class="p">]</span>
+        <span class="n">gt_boxes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ann</span><span class="p">[</span><span class="s2">&quot;bbox&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="n">annotations</span><span class="p">]</span>
+        
+        <span class="c1"># Check if there are both predicted and ground truth bounding boxes</span>
+        <span class="k">if</span> <span class="n">gt_boxes</span> <span class="ow">and</span> <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pred_boxes</span><span class="p">:</span>
+            <span class="c1"># Convert ground truth bounding boxes to the required format (xywh -&gt; xyxy)</span>
+            <span class="n">gt_boxes</span> <span class="o">=</span> <span class="p">[[</span><span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">bb</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">bb</span><span class="p">[</span><span class="mi">3</span><span class="p">]]</span> <span class="k">for</span> <span class="n">bb</span> <span class="ow">in</span> <span class="n">gt_boxes</span><span class="p">]</span>
+            
+            <span class="c1"># Convert predicted bounding boxes and labels to tensors</span>
+            <span class="n">pred_boxes</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pred_boxes</span><span class="p">])</span>
+            <span class="n">gt_boxes</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">b</span><span class="p">))</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">gt_boxes</span><span class="p">])</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pred_boxes</span><span class="p">)</span>
+            <span class="n">labels_preds</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">])</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">gt_boxes</span><span class="p">)</span>
+            <span class="n">labels_gts</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">])</span>
+            
+            <span class="c1"># Create dictionaries for ground truth and predicted bounding boxes</span>
+            <span class="n">gt</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;image_id&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;image_id&#39;</span><span class="p">],</span> <span class="s1">&#39;labels&#39;</span><span class="p">:</span> <span class="n">labels_gts</span><span class="p">,</span> <span class="s1">&#39;boxes&#39;</span><span class="p">:</span> <span class="n">gt_boxes</span><span class="p">}</span>
+            <span class="n">prd</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;image_id&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;image_id&#39;</span><span class="p">],</span> <span class="s1">&#39;labels&#39;</span><span class="p">:</span> <span class="n">labels_preds</span><span class="p">,</span> <span class="s1">&#39;boxes&#39;</span><span class="p">:</span> <span class="n">pred_boxes</span><span class="p">,</span> <span class="s1">&#39;scores&#39;</span><span class="p">:</span> <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">scores</span><span class="p">}</span>
+            
+            <span class="c1"># Append the dictionaries to the respective lists</span>
+            <span class="n">outputs_test_preds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prd</span><span class="p">)</span>
+            <span class="n">outputs_test_gt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gt</span><span class="p">)</span>
+    
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="c1"># Handle exceptions, e.g., when ground truth annotations are not available</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Exception: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># whole test set</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">detection</span><span class="o">.</span><span class="n">mean_ap</span><span class="o">.</span><span class="n">MeanAveragePrecision</span><span class="p">(</span><span class="n">box_format</span><span class="o">=</span><span class="s1">&#39;xyxy&#39;</span><span class="p">,</span> <span class="n">iou_type</span><span class="o">=</span><span class="s1">&#39;bbox&#39;</span><span class="p">,</span> <span class="n">iou_thresholds</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="n">rec_thresholds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_detection_thresholds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">class_metrics</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">m</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">preds</span><span class="o">=</span><span class="n">outputs_test_preds</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">outputs_test_gt</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+
+<span class="n">pprint</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">compute</span><span class="p">()[</span><span class="s1">&#39;map&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor(0.8115)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="run-detection-clipping-and-classification">
+<h2>Run detection, clipping and classification<a class="headerlink" href="#run-detection-clipping-and-classification" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># go to the location of the repo</span>
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">model_dir</span><span class="si">}</span><span class="s2">housing-passports-v2/&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># load the trained model</span>
+<span class="n">classification_ckpt_path</span> <span class="o">=</span> <span class="s2">&quot;/home/ubuntu/.aim/63869a95ae444b3d87f78331/checkpoints/epoch:48-step:12838-loss:2.419-f1:4.245.ckpt&quot;</span>
+<span class="n">classification_model</span> <span class="o">=</span> <span class="n">load_classification_model</span><span class="p">(</span><span class="n">classification_ckpt_path</span><span class="p">)</span>
+<span class="n">classification_model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">classification_model</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>  
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># iterate through the first 100 images in the test dataset</span>
+<span class="n">cumulative_predictions</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">gt</span> <span class="ow">in</span> <span class="n">test_json</span><span class="p">[</span><span class="s1">&#39;annotations&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">100</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">test_json</span><span class="p">[</span><span class="s1">&#39;images&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">gt</span><span class="p">[</span><span class="s1">&#39;image_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]:</span>
+            <span class="n">im</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">mapillary_images/&quot;</span><span class="o">+</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">])</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="n">predictor</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+            <span class="n">bb_scores</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">scores</span>
+            <span class="n">box_num</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pred_boxes</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">bb</span><span class="p">,</span> <span class="n">sc</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pred_boxes</span><span class="p">,</span> <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">scores</span><span class="p">):</span>
+                    <span class="n">bbox_data</span> <span class="o">=</span> <span class="n">bb</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> 
+                    <span class="n">clipped_img</span> <span class="o">=</span> <span class="n">clip_image_around_bbox_buffer</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">bbox_data</span><span class="p">)</span>
+                    <span class="n">img</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">clipped_img</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+                    <span class="n">img</span> <span class="o">=</span> <span class="n">ToPILImage</span><span class="p">()(</span><span class="n">img</span><span class="p">)</span>
+                    <span class="n">transform</span> <span class="o">=</span> <span class="n">Compose</span><span class="p">([</span>
+                        <span class="n">Resize</span><span class="p">((</span><span class="mi">512</span><span class="p">,</span><span class="mi">512</span><span class="p">),</span> <span class="n">antialias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                        <span class="n">ToTensor</span><span class="p">(),</span>
+                        <span class="n">Normalize</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="p">[</span><span class="mf">0.485</span><span class="p">,</span> <span class="mf">0.456</span><span class="p">,</span> <span class="mf">0.406</span><span class="p">],</span> <span class="n">std</span><span class="o">=</span><span class="p">[</span><span class="mf">0.229</span><span class="p">,</span> <span class="mf">0.224</span><span class="p">,</span> <span class="mf">0.225</span><span class="p">]),</span>
+                    <span class="p">])</span>
+                    <span class="n">img</span> <span class="o">=</span> <span class="n">transform</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+                    <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">image_clipped_output_dirs</span> <span class="o">=</span> <span class="n">i</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;./output/test_inference_images&quot;</span><span class="p">,</span> <span class="n">image_clipped_output_dirs</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;./output/test_inference_images&quot;</span><span class="p">,</span> <span class="n">image_clipped_output_dirs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> \
+                                             <span class="n">image_clipped_output_dirs</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                        
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pred_boxes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">box_num</span><span class="o">=</span><span class="n">box_num</span><span class="o">+</span><span class="mi">1</span>
+                        <span class="n">categories</span> <span class="o">=</span> <span class="n">evaluate_classification_model</span><span class="p">(</span><span class="n">classification_model</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">classification_model</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+                        <span class="n">image_boxes_categories</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;image_name&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">],</span> <span class="s2">&quot;boxes&quot;</span><span class="p">:</span> <span class="n">bbox_data</span><span class="p">,</span> <span class="s2">&quot;box_scores&quot;</span><span class="p">:</span> <span class="n">sc</span><span class="p">,</span> \
+                                                  <span class="s2">&quot;complete&quot;</span><span class="p">:</span> <span class="n">categories</span><span class="p">[</span><span class="s2">&quot;complete&quot;</span><span class="p">],</span> <span class="s2">&quot;condition&quot;</span><span class="p">:</span> <span class="n">categories</span><span class="p">[</span><span class="s2">&quot;condition&quot;</span><span class="p">],</span> \
+                                                  <span class="s2">&quot;material&quot;</span><span class="p">:</span> <span class="n">categories</span><span class="p">[</span><span class="s2">&quot;material&quot;</span><span class="p">],</span> <span class="s2">&quot;security&quot;</span><span class="p">:</span> <span class="n">categories</span><span class="p">[</span><span class="s2">&quot;security&quot;</span><span class="p">],</span> \
+                                                  <span class="s2">&quot;use&quot;</span><span class="p">:</span> <span class="n">categories</span><span class="p">[</span><span class="s2">&quot;use&quot;</span><span class="p">],</span> <span class="s2">&quot;image_name_clip&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">][:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">box_num</span><span class="si">}</span><span class="s2">.jpg&quot;</span><span class="p">,</span> \
+                                                  <span class="s2">&quot;ground_truth&quot;</span><span class="p">:</span> <span class="n">gt</span><span class="p">[</span><span class="s1">&#39;attributes&#39;</span><span class="p">]}</span>
+                            
+                        <span class="n">cumulative_predictions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">image_boxes_categories</span><span class="p">)</span>
+                        <span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;./output/test_inference_images/&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">][:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">box_num</span><span class="si">}</span><span class="s2">.jpg&quot;</span><span class="p">),</span> <span class="n">clipped_img</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">categories</span> <span class="o">=</span> <span class="n">evaluate_classification_model</span><span class="p">(</span><span class="n">classification_model</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">classification_model</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+                        <span class="n">image_boxes_categories</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;image_name&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">],</span> <span class="s2">&quot;boxes&quot;</span><span class="p">:</span> <span class="n">bbox_data</span><span class="p">,</span> <span class="s2">&quot;box_scores&quot;</span><span class="p">:</span> <span class="n">sc</span><span class="p">,</span> \
+                                                  <span class="s2">&quot;complete&quot;</span><span class="p">:</span> <span class="n">categories</span><span class="p">[</span><span class="s2">&quot;complete&quot;</span><span class="p">],</span> <span class="s2">&quot;condition&quot;</span><span class="p">:</span> <span class="n">categories</span><span class="p">[</span><span class="s2">&quot;condition&quot;</span><span class="p">],</span> \
+                                                  <span class="s2">&quot;material&quot;</span><span class="p">:</span> <span class="n">categories</span><span class="p">[</span><span class="s2">&quot;material&quot;</span><span class="p">],</span> <span class="s2">&quot;security&quot;</span><span class="p">:</span> <span class="n">categories</span><span class="p">[</span><span class="s2">&quot;security&quot;</span><span class="p">],</span> \
+                                                  <span class="s2">&quot;use&quot;</span><span class="p">:</span> <span class="n">categories</span><span class="p">[</span><span class="s2">&quot;use&quot;</span><span class="p">],</span> <span class="s2">&quot;image_name_clip&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> \
+                                                  <span class="s2">&quot;ground_truth&quot;</span><span class="p">:</span> <span class="n">gt</span><span class="p">[</span><span class="s1">&#39;attributes&#39;</span><span class="p">]}</span>
+                        <span class="n">cumulative_predictions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">image_boxes_categories</span><span class="p">)</span>
+                        <span class="n">cumulative_gt_attributes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gt</span><span class="p">[</span><span class="s1">&#39;attributes&#39;</span><span class="p">])</span>
+                        <span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;./output/test_inference_images/&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span> <span class="n">clipped_img</span><span class="p">)</span>
+                        
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># make a dataframe of the predictions</span>
+<span class="n">df_preds</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">cumulative_predictions</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="visualize-some-results">
+<h3>Visualize some results<a class="headerlink" href="#visualize-some-results" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_preds_</span> <span class="o">=</span> <span class="n">df_preds</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Display images and bounding boxes for a random selection of tiles</span>
+<span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">df_preds_</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;output/test_inference_images/</span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">image_name_clip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">rasterio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;./output/test_inference_images/</span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">image_name_clip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">imgr</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;File &quot;</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">image_name_clip</span><span class="p">,</span> <span class="s2">&quot; with ground truth attributes &quot;</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">ground_truth</span><span class="p">)</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">imgr</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+            
+        <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">complete</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">condition</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">material</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">security</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">use</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File  rb3QV25WsP0NdylOHZSzxE/left/995792421751752_left.jpg  with ground truth attributes  {&#39;building_completeness&#39;: &#39;complete&#39;, &#39;building_condition&#39;: &#39;poor&#39;, &#39;building_material&#39;: &#39;mix-other-unclear&#39;, &#39;building_security&#39;: &#39;unsecured&#39;, &#39;building_use&#39;: &#39;residential&#39;, &#39;occluded&#39;: False, &#39;rotation&#39;: 0.0}
+</pre></div>
+</div>
+<img alt="../_images/f856256332ecff8f94c405fd131c69f67b2728200cded1b5f5b6939a4a8a29b1.png" src="../_images/f856256332ecff8f94c405fd131c69f67b2728200cded1b5f5b6939a4a8a29b1.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File  sVDfTtZgioxYQJrk6clSeI/left/317396310690052_left.jpg  with ground truth attributes  {&#39;building_completeness&#39;: &#39;complete&#39;, &#39;building_condition&#39;: &#39;fair&#39;, &#39;building_material&#39;: &#39;mix-other-unclear&#39;, &#39;building_security&#39;: &#39;unsecured&#39;, &#39;building_use&#39;: &#39;residential&#39;, &#39;occluded&#39;: False, &#39;rotation&#39;: 0.0}
+</pre></div>
+</div>
+<img alt="../_images/3b69165d1671752ca1e3b8eaf5cd6d14833073016329c9b9ae63b58698e8b14e.png" src="../_images/3b69165d1671752ca1e3b8eaf5cd6d14833073016329c9b9ae63b58698e8b14e.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File  rb3QV25WsP0NdylOHZSzxE/left/330498719422552_left.jpg  with ground truth attributes  {&#39;building_completeness&#39;: &#39;complete&#39;, &#39;building_condition&#39;: &#39;poor&#39;, &#39;building_material&#39;: &#39;plaster&#39;, &#39;building_security&#39;: &#39;unsecured&#39;, &#39;building_use&#39;: &#39;mixed&#39;, &#39;occluded&#39;: False, &#39;rotation&#39;: 0.0}
+</pre></div>
+</div>
+<img alt="../_images/d8cdd5ea2bc7914ffb56568f40dbf936ee430480d4265c5a3913b3ba4b9f73e4.png" src="../_images/d8cdd5ea2bc7914ffb56568f40dbf936ee430480d4265c5a3913b3ba4b9f73e4.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File  rb3QV25WsP0NdylOHZSzxE/left/830052638707374_left.jpg  with ground truth attributes  {&#39;building_completeness&#39;: &#39;incomplete&#39;, &#39;building_condition&#39;: &#39;poor&#39;, &#39;building_material&#39;: &#39;corrugated_metal&#39;, &#39;building_security&#39;: &#39;unsecured&#39;, &#39;building_use&#39;: &#39;residential&#39;, &#39;occluded&#39;: False, &#39;rotation&#39;: 0.0}
+</pre></div>
+</div>
+<img alt="../_images/35aad4d190fe3b2f4ca56533f4bad3bb12b0827f449d4246aeedacf95f4330f5.png" src="../_images/35aad4d190fe3b2f4ca56533f4bad3bb12b0827f449d4246aeedacf95f4330f5.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File  rb3QV25WsP0NdylOHZSzxE/left/295172426598155_left_2.jpg  with ground truth attributes  {&#39;building_completeness&#39;: &#39;complete&#39;, &#39;building_condition&#39;: &#39;poor&#39;, &#39;building_material&#39;: &#39;plaster&#39;, &#39;building_security&#39;: &#39;secured&#39;, &#39;building_use&#39;: &#39;mixed&#39;, &#39;occluded&#39;: False, &#39;rotation&#39;: 0.0}
+</pre></div>
+</div>
+<img alt="../_images/c1b57d9967b76192c70fb7116ef04f40deded83e7d58f36d6563443c6f9de024.png" src="../_images/c1b57d9967b76192c70fb7116ef04f40deded83e7d58f36d6563443c6f9de024.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File  sVDfTtZgioxYQJrk6clSeI/left/1464783370936895_left_2.jpg  with ground truth attributes  {&#39;building_completeness&#39;: &#39;complete&#39;, &#39;building_condition&#39;: &#39;poor&#39;, &#39;building_material&#39;: &#39;wood_polished&#39;, &#39;building_security&#39;: &#39;unsecured&#39;, &#39;building_use&#39;: &#39;residential&#39;, &#39;occluded&#39;: False, &#39;rotation&#39;: 0.0}
+</pre></div>
+</div>
+<img alt="../_images/83561927ea8c58ed3d27369a740324bacdedf69004ec753518da203195e3d594.png" src="../_images/83561927ea8c58ed3d27369a740324bacdedf69004ec753518da203195e3d594.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File  sVDfTtZgioxYQJrk6clSeI/left/1354190961832569_left_2.jpg  with ground truth attributes  {&#39;building_completeness&#39;: &#39;complete&#39;, &#39;building_condition&#39;: &#39;poor&#39;, &#39;building_material&#39;: &#39;mix-other-unclear&#39;, &#39;building_security&#39;: &#39;secured&#39;, &#39;building_use&#39;: &#39;residential&#39;, &#39;occluded&#39;: False, &#39;rotation&#39;: 0.0}
+</pre></div>
+</div>
+<img alt="../_images/a7819839a5b52294bdc57cdd8c54bd910e29f576892d74a4d5a66e9f340eef37.png" src="../_images/a7819839a5b52294bdc57cdd8c54bd910e29f576892d74a4d5a66e9f340eef37.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File  r7tGTdge9ZQXVPAcNbiEnu/left/2648202768667523_left_2.jpg  with ground truth attributes  {&#39;building_completeness&#39;: &#39;complete&#39;, &#39;building_condition&#39;: &#39;fair&#39;, &#39;building_material&#39;: &#39;plaster&#39;, &#39;building_security&#39;: &#39;secured&#39;, &#39;building_use&#39;: &#39;residential&#39;, &#39;occluded&#39;: False, &#39;rotation&#39;: 0.0}
+</pre></div>
+</div>
+<img alt="../_images/3055089b6c5c0548ae71fe1a329bfdca3b48d59ba3f17d0460cbd4b7c1a82111.png" src="../_images/3055089b6c5c0548ae71fe1a329bfdca3b48d59ba3f17d0460cbd4b7c1a82111.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File  rb3QV25WsP0NdylOHZSzxE/left/1498491417358362_left_2.jpg  with ground truth attributes  {&#39;building_completeness&#39;: &#39;complete&#39;, &#39;building_condition&#39;: &#39;fair&#39;, &#39;building_material&#39;: &#39;mix-other-unclear&#39;, &#39;building_security&#39;: &#39;secured&#39;, &#39;building_use&#39;: &#39;residential&#39;, &#39;occluded&#39;: False, &#39;rotation&#39;: 0.0}
+</pre></div>
+</div>
+<img alt="../_images/faf2c4b4741786d480cf9c1dc970e7574b8407b2b22e7d58b36468f49b2a125c.png" src="../_images/faf2c4b4741786d480cf9c1dc970e7574b8407b2b22e7d58b36468f49b2a125c.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File  sVDfTtZgioxYQJrk6clSeI/left/345064584539357_left.jpg  with ground truth attributes  {&#39;building_completeness&#39;: &#39;complete&#39;, &#39;building_condition&#39;: &#39;fair&#39;, &#39;building_material&#39;: &#39;mix-other-unclear&#39;, &#39;building_security&#39;: &#39;unsecured&#39;, &#39;building_use&#39;: &#39;residential&#39;, &#39;occluded&#39;: False, &#39;rotation&#39;: 0.0}
+</pre></div>
+</div>
+<img alt="../_images/d760a42927cc544515242d66365e8dac95cb446657efff78d6696de44415badd.png" src="../_images/d760a42927cc544515242d66365e8dac95cb446657efff78d6696de44415badd.png" />
+</div>
+</div>
+</section>
+<section id="this-is-a-peek-into-what-the-predictions-csv-output-looks-like">
+<h3>This is a peek into what the predictions csv output looks like<a class="headerlink" href="#this-is-a-peek-into-what-the-predictions-csv-output-looks-like" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_preds</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>image_name</th>
+      <th>boxes</th>
+      <th>box_scores</th>
+      <th>complete</th>
+      <th>condition</th>
+      <th>material</th>
+      <th>security</th>
+      <th>use</th>
+      <th>image_name_clip</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>r7tGTdge9ZQXVPAcNbiEnu/left/1746355092495649_l...</td>
+      <td>[713.345458984375, 253.937255859375, 1022.2023...</td>
+      <td>tensor(0.9842, device='cuda:0')</td>
+      <td>complete</td>
+      <td>fair</td>
+      <td>plaster</td>
+      <td>unsecured</td>
+      <td>residential</td>
+      <td>r7tGTdge9ZQXVPAcNbiEnu/left/1746355092495649_l...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>r7tGTdge9ZQXVPAcNbiEnu/left/1796054077478724_l...</td>
+      <td>[482.8565368652344, 392.7989501953125, 1019.79...</td>
+      <td>tensor(0.9918, device='cuda:0')</td>
+      <td>complete</td>
+      <td>good</td>
+      <td>plaster</td>
+      <td>unsecured</td>
+      <td>residential</td>
+      <td>r7tGTdge9ZQXVPAcNbiEnu/left/1796054077478724_l...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>r7tGTdge9ZQXVPAcNbiEnu/left/1797722660681962_l...</td>
+      <td>[107.59165954589844, 127.55589294433594, 682.8...</td>
+      <td>tensor(0.9996, device='cuda:0')</td>
+      <td>complete</td>
+      <td>poor</td>
+      <td>mix-other-unclear</td>
+      <td>unsecured</td>
+      <td>residential</td>
+      <td>r7tGTdge9ZQXVPAcNbiEnu/left/1797722660681962_l...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>r7tGTdge9ZQXVPAcNbiEnu/left/1939599736440639_l...</td>
+      <td>[0.5353906154632568, 246.79296875, 391.3089904...</td>
+      <td>tensor(0.9970, device='cuda:0')</td>
+      <td>complete</td>
+      <td>fair</td>
+      <td>plaster</td>
+      <td>unsecured</td>
+      <td>residential</td>
+      <td>r7tGTdge9ZQXVPAcNbiEnu/left/1939599736440639_l...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>r7tGTdge9ZQXVPAcNbiEnu/left/1939599736440639_l...</td>
+      <td>[378.7174072265625, 15.589765548706055, 827.27...</td>
+      <td>tensor(0.9717, device='cuda:0')</td>
+      <td>incomplete</td>
+      <td>poor</td>
+      <td>mix-other-unclear</td>
+      <td>unsecured</td>
+      <td>mixed</td>
+      <td>r7tGTdge9ZQXVPAcNbiEnu/left/1939599736440639_l...</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>r7tGTdge9ZQXVPAcNbiEnu/left/1939599736440639_l...</td>
+      <td>[0.5353906154632568, 246.79296875, 391.3089904...</td>
+      <td>tensor(0.9970, device='cuda:0')</td>
+      <td>complete</td>
+      <td>poor</td>
+      <td>plaster</td>
+      <td>unsecured</td>
+      <td>commercial</td>
+      <td>r7tGTdge9ZQXVPAcNbiEnu/left/1939599736440639_l...</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>r7tGTdge9ZQXVPAcNbiEnu/left/1939599736440639_l...</td>
+      <td>[378.7174072265625, 15.589765548706055, 827.27...</td>
+      <td>tensor(0.9717, device='cuda:0')</td>
+      <td>incomplete</td>
+      <td>poor</td>
+      <td>mix-other-unclear</td>
+      <td>unsecured</td>
+      <td>mixed</td>
+      <td>r7tGTdge9ZQXVPAcNbiEnu/left/1939599736440639_l...</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>r7tGTdge9ZQXVPAcNbiEnu/left/1966801483681588_l...</td>
+      <td>[271.408203125, 437.2467041015625, 1021.005737...</td>
+      <td>tensor(0.9931, device='cuda:0')</td>
+      <td>incomplete</td>
+      <td>poor</td>
+      <td>corrugated_metal</td>
+      <td>unsecured</td>
+      <td>residential</td>
+      <td>r7tGTdge9ZQXVPAcNbiEnu/left/1966801483681588_l...</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>r7tGTdge9ZQXVPAcNbiEnu/left/1988227758197966_l...</td>
+      <td>[76.96910095214844, 54.42814254760742, 836.309...</td>
+      <td>tensor(0.9789, device='cuda:0')</td>
+      <td>complete</td>
+      <td>good</td>
+      <td>plaster</td>
+      <td>secured</td>
+      <td>residential</td>
+      <td>r7tGTdge9ZQXVPAcNbiEnu/left/1988227758197966_l...</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>r7tGTdge9ZQXVPAcNbiEnu/left/2012497842450451_l...</td>
+      <td>[631.1368408203125, 273.9692077636719, 1022.17...</td>
+      <td>tensor(0.9783, device='cuda:0')</td>
+      <td>complete</td>
+      <td>poor</td>
+      <td>mix-other-unclear</td>
+      <td>secured</td>
+      <td>residential</td>
+      <td>r7tGTdge9ZQXVPAcNbiEnu/left/2012497842450451_l...</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./docs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="detect_classify_clip.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Inference</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="triangulation.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Triangulation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#set-up">Set up</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#check-some-images-and-labels">Check some images and labels</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-the-model">Load the model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#check-the-logs-of-the-trained-model">Check the logs of the trained model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-inference">Run inference</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-predictions-and-plot-them-on-some-subset-of-the-test-dataset">Generate predictions and plot them on some subset of the test dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualize-one-of-the-resulting-images">Visualize one of the resulting images</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-evaluation-of-the-trained-model-on-the-test-dataset">Run evaluation of the trained model on the test dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-detection-clipping-and-classification">Run detection, clipping and classification</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualize-some-results">Visualize some results</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#this-is-a-peek-into-what-the-predictions-csv-output-looks-like">This is a peek into what the predictions csv output looks like</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Development Seed
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
