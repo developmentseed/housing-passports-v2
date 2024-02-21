@@ -43,6 +43,6 @@ BUILDING_PROPS = dic2d2dict(BUILDING_PROPS_DICT)
 BUILDING_PARTS = dic2d2dict(BUILDING_PARTS_DICT)
 
 IMAGE_SIDE = {
-    "right": 3,
-    "left": 1,
+    "right": 1,
+    "left": 3,
 }

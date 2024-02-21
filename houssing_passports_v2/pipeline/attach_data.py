@@ -24,6 +24,7 @@ import fire
 import geopandas as gpd
 from copy import deepcopy
 from shapely import wkb
+from shapely.geometry import shape
 
 
 def pixel2proportion(box_values, w=1024, h=1024, r=6):
@@ -48,11 +49,37 @@ def pixel2proportion(box_values, w=1024, h=1024, r=6):
     ]
 
 
+def add_geom(features):
+    for i in tqdm(features, desc="add geom"):
+        i["geom"] = shape(i.get("geometry"))
+    return features
+
+
+def rm_geom(features):
+    for i in features:
+        if "geom" in i.keys():
+            del i["geom"]
+    return features
+
+
+def include_geom(features, features_area):
+    for feature in tqdm(features, desc="include_geom"):
+        for feature_area in features_area:
+            if feature_area["geom"].contains(feature["geom"].centroid):
+                feature["properties"]["neighborhood"] = feature_area["properties"][
+                    "neighborhood"
+                ]
+                break
+
+    return features
+
+
 def combine_resources(
     predictions_csv,
     original_geojson,
     gpkg_buildings_file,
     prefix_path_images,
+    neighborhood,
     shp_buildings_file,
     geojson_merge_output,
     csv_output_trajectory,
@@ -85,14 +112,23 @@ def combine_resources(
 
     """
 
-    features = read_geojson(original_geojson)
-    csv_predictions_data = read_csv(predictions_csv)
+    features_areas_ = read_geojson(neighborhood)
+    features_areas__ = add_geom(features_areas_)
 
-    df_polygons = gpd.read_file(gpkg_buildings_file)
+    features_ = read_geojson(original_geojson)
+    features__ = add_geom(features_)
+
+    features_all = include_geom(features__, features_areas__)
+    features = rm_geom(features_all)
+
+    # df_polygons = gpd.read_file(gpkg_buildings_file)
+
+    csv_predictions_data = read_csv(predictions_csv)
+    print("total_csv", len(csv_predictions_data))
     # group csv data
     csv_groups = {}
     for box in tqdm(csv_predictions_data, desc="group csv data"):
-        fake_key = box.get("image_name")
+        fake_key = box.get("image_name").strip()
         box["boxes"] = json.loads(box.get("boxes"))
         box["boxes_float"] = json.loads(box.get("boxes_float", "[]"))
         box["boxes_int"] = json.loads(box.get("boxes_int", "[]"))
@@ -103,8 +139,15 @@ def combine_resources(
 
     for feature in tqdm(features, desc="merge features and csv"):
         props = feature.get("properties")
-        props["compass_angle_fix"] = compass_to_cartesian(props.get("compass_angle"))
-        fake_key = "/".join(props.get("image_path", "").split("/")[-3:])
+        # side = props.get("image_path").split("_")[-1].split(".")[0]
+        compass_angle_ = props.get("compass_angle")
+        # if side == "left":
+        #     compass_angle = round((compass_angle_ + 90) % 360, 2)
+        # else:
+        #     compass_angle = round((compass_angle_ - 90 + 360) % 360, 2)
+
+        props["compass_angle_fix"] = compass_angle_
+        fake_key = props.get("image_path", "").split("mapillary_images_new/")[1].strip()
         props["boxes"] = csv_groups.get(fake_key, [])
 
     write_geojson(geojson_merge_output, features)
@@ -116,20 +159,21 @@ def combine_resources(
     for feature in tqdm(features, desc="Hp  create format"):
         props = feature.get("properties", {})
         lng, lat = feature.get("geometry", {}).get("coordinates")
-        path_seq = props.get("image_path", "").split("/")
+        path_seq = props.get("image_path", "").strip().split("/")
         image_name = path_seq[-1]
+        neighborhood_ = props.get("neighborhood")
 
         image_path_ = "/".join([prefix_path_images, *path_seq[-3:-1]])
         cam = IMAGE_SIDE.get(path_seq[-2], 0)
         frame = image_name.split(".")[0]
         trajectory = {
-            "heading[deg]": compass_to_cartesian(props.get("compass_angle")),
+            "heading[deg]": props.get("compass_angle_fix"),
             "image_fname": image_name,
             "frame": frame,
             "latitude[deg]": lat,
             "longitude[deg]": lng,
             "cam": cam,
-            "neighborhood": "n1",  # default
+            "neighborhood": neighborhood_,  # default
             "subfolder": image_path_,
         }
         box_props = {
@@ -140,7 +184,7 @@ def combine_resources(
             "subfolder": image_path_,
             "cam": cam,
             "frame": frame,
-            "neighborhood": "n1",
+            "neighborhood": neighborhood_,
         }
         box_building_props = deepcopy(box_props)
         # box_building_parts = deepcopy(box_props)
@@ -161,15 +205,7 @@ def combine_resources(
                         float(box_meta.get("box_scores", "1"))
                     )
 
-            # else:
-            #     new_key = BUILDING_PARTS.get(box_label)
-            #     box_building_parts["detection_boxes"].append(deepcopy(box))
-            #     box_building_parts["detection_classes"].append(new_key)
-            #     box_building_parts["detection_scores"].append(1)
-
         building_props_out.append(deepcopy(box_building_props))
-        # building_parts_out.append(deepcopy(box_building_parts))
-
     # write_json(BUILDING_PROPS, )
     # write files
     write_dictlist2csv(csv_output_trajectory, trajectories_out)
@@ -181,15 +217,21 @@ def combine_resources(
     write_pbtxt_content(parts_map_file, BUILDING_PARTS)
 
     # write shp
-    df_polygons["neighborhood"] = "n1"
-    df_polygons = df_polygons.to_crs(4326)
-    df_polygons["geometry"] = df_polygons["geometry"].apply(
-        lambda geom: geom
-        if geom.is_empty
-        else wkb.loads(wkb.dumps(geom, output_dimension=2))
-    )
+    # df_polygons = df_polygons.to_crs(4326)
+    # df_polygons["geometry"] = df_polygons["geometry"].apply(
+    #     lambda geom: geom
+    #     if geom.is_empty
+    #     else wkb.loads(wkb.dumps(geom, output_dimension=2))
+    # )
 
-    df_polygons.to_file(shp_buildings_file, driver="ESRI Shapefile")
+    # df_neighborhood = gpd.read_file(neighborhood)
+
+    # df_polygons_centroids = df_polygons.copy()
+    # df_polygons_centroids.geometry = df_polygons.geometry.centroid
+    #
+    # joined = gpd.sjoin(df_polygons_centroids, df_neighborhood, how="inner", op="within")
+    # df_polygons["neighborhood"] = joined["neighborhood"]
+
     # keys file
     write_json(
         props_keys_file, {k: list(v.keys()) for k, v in BUILDING_PROPS_DICT.items()}
@@ -197,6 +239,7 @@ def combine_resources(
     write_json(
         part_keys_file, {k: list(v.keys()) for k, v in BUILDING_PARTS_DICT.items()}
     )
+    # df_polygons.to_file(shp_buildings_file, driver="ESRI Shapefile")
 
 
 def main():
