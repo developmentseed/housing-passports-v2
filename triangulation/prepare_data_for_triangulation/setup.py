@@ -17,7 +17,7 @@ install_requires = [x.strip() for x in all_reqs if "git+" not in x]
 dependency_links = [x.strip().replace("git+", "") for x in all_reqs if "git+" not in x]
 
 setup(
-    name="housing-passports-v2",
+    name="prepare_data_for_triangulation",
     author="Develomentseed",
     author_email="devseed@developmentseed.org",
     version=__version__,
@@ -29,7 +29,7 @@ setup(
     entry_points={
         "console_scripts": [
             "mapillary_img_angles=mapillary.heading:main",
-            "attach_data=cvat.attach_data:main",
+            "attach_data=pipeline.attach_data:main",
         ]
     },
     packages=find_packages(exclude=["docs", "tests*"]),
