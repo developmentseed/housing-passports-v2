@@ -168,3 +168,5 @@ data-scripts/fixtures/*outputs*.geojson
 
 data/*
 .idea/
+triangulation/files_for_db/*
+triangulation/triangulation_results/*
