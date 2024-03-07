@@ -16,7 +16,7 @@ import tensorflow as tf
 from geoalchemy2.functions import ST_Intersects, ST_Within
 # from object_detection.utils import label_map_util
 from osgeo import ogr
-from sqlalchemy import create_engine, text, and_
+from sqlalchemy import create_engine, text, and_,join ,outerjoin
 from sqlalchemy.orm import sessionmaker
 from tqdm import tqdm
 
@@ -552,6 +552,7 @@ def export_detection_geometry(db_url, save_fpath, neighborhood, det_class,
     ########################
     print('Getting desired detections...')
     detections = session.query(Detection, Detection.detection_ray.ST_AsGeoJSON()) \
+        .outerjoin(Image, Detection.image_id == Image.id) \
         .filter(Detection.neighborhood == neighborhood)
     if det_class:
         print(f'Filtering for classes: {str(det_class)}...')
@@ -560,6 +561,7 @@ def export_detection_geometry(db_url, save_fpath, neighborhood, det_class,
         print('Filtering detections that don\'t have matching building...')
         detections = detections.filter(Detection.building_id.isnot(None))
 
+    detections = detections.add_columns(Image.subfolder, Image.image_fname)
     n_rows = detections.count()
     print(f'Found {n_rows} detections. Pulling necessary info...')
 
@@ -572,10 +574,13 @@ def export_detection_geometry(db_url, save_fpath, neighborhood, det_class,
                         {"name": "urn:ogc:def:crs:OGC:1.3:CRS84"}},
                     "features": []}
 
-    for det, geom in tqdm(detections.yield_per(10000),
-                          desc='Constructing geometries', total=n_rows):
+    for det, geom, image_subfolder, image_image_fname in tqdm(detections.yield_per(10000),
+                                                              desc='Constructing geometries', total=n_rows):
+        image_path = f'{image_subfolder}/{image_image_fname}' if image_subfolder and image_image_fname else None
+
         properties = dict(class_str=det.class_str,
                           image_id=getattr(det, 'image_id', 'None'),
+                          image_path=image_path,
                           confidence=det.confidence)
 
         geojson_rays['features'].append({'type': "Feature",
