@@ -525,8 +525,9 @@ def link_db_detections(db_url, neighborhood):
               help='Property classes to include (e.g., "window").')
 @click.option('--linked-dets-only', type=bool, default=True,
               help='Whether or not to only include detections successfully linked to a building.')
+@click.option('--bucker_path', type=str, default="", help='url bucket path ')
 def export_detection_geometry(db_url, save_fpath, neighborhood, det_class,
-                              linked_dets_only):
+                              linked_dets_only, bucker_path):
     """Generate geojson consisting of linestrings, one per ML detection
 
     Parameters
@@ -542,10 +543,15 @@ def export_detection_geometry(db_url, save_fpath, neighborhood, det_class,
         detections.
     linked_dets_only: bool
         Whether to only export detections that are matched to a building.
+    bucker_path: str
+        Url bucket path.
     """
 
     # Link to DB
     session = _get_session(db_url)
+    if bucker_path:
+        if bucker_path.endswith("/"):
+            bucker_path = bucker_path[:-1]
 
     ########################
     # Get all detection rays
@@ -576,7 +582,10 @@ def export_detection_geometry(db_url, save_fpath, neighborhood, det_class,
 
     for det, geom, image_subfolder, image_image_fname in tqdm(detections.yield_per(10000),
                                                               desc='Constructing geometries', total=n_rows):
+
         image_path = f'{image_subfolder}/{image_image_fname}' if image_subfolder and image_image_fname else None
+        if bucker_path and image_path:
+            image_path = "/".join([bucker_path,*image_path.split("/")[-3:]])
 
         properties = dict(class_str=det.class_str,
                           image_id=getattr(det, 'image_id', 'None'),

@@ -91,7 +91,8 @@ do
         --det_class=mixed \
         --det_class=commercial \
         --linked-dets-only=True \
-        --save-fpath=$outputDir/detections_ray/${neighborhood}_lines_ok.geojson
+        --save-fpath=$outputDir/detections_ray/${neighborhood}_lines_ok.geojson \
+        --bucker_path=s3://hp-images-v2/mapillary_images_new
 done
 python post_processing/merge_geojson.py $outputDir/detections_ray/ $outputDir/${COUNTRY}_ray_lines.shp
 
@@ -108,7 +109,11 @@ mkdir -p $outputDir/buildings/
 for neighborhood in "${neighborhoods[@]}"
 do
     echo 'Export buildings' $neighborhood
-    python post_processing/create_geojson_buildings.py ${PG_CONNECTION} ${neighborhood} $outputDir/buildings/${neighborhood}_ok.geojson
+    python post_processing/create_geojson_buildings.py \
+    ${PG_CONNECTION} \
+    ${neighborhood} \
+    $outputDir/buildings/${neighborhood}_ok.geojson \
+    s3://hp-images-v2/mapillary_images_new
 done
 python post_processing/merge_geojson.py $outputDir/buildings/ $outputDir/${COUNTRY}_buildings.shp
 
