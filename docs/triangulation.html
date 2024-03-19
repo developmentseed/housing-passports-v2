@@ -150,8 +150,8 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="detector_train.html">Detection Model Training</a></li>
-<li class="toctree-l1"><a class="reference internal" href="detector_evaluate.html">Detection Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="detector_train.html">Detector Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="detector_evaluate.html">Detector Evaluation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="classifier_train.html">Classifier Training</a></li>
 <li class="toctree-l1"><a class="reference internal" href="classifier_evaluate.html">Classifier Evaluation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="detect_classify_clip.html">Inference</a></li>
@@ -422,8 +422,8 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="triangulation">
 <h1>Triangulation<a class="headerlink" href="#triangulation" title="Permalink to this heading">#</a></h1>
 <p>The goal of the triangulation exercise is to align the attributed building facades from the machine learning workflow with building footprints.</p>
-<p>The documention for preparing the data for traingulation starting from the <code class="docutils literal notranslate"><span class="pre">detection_classification_predictions.csv</span></code> obtained from inference is located here: <a class="github reference external" href="https://github.com/developmentseed/housing-passports/blob/master/post_processing/README.md">developmentseed/housing-passports</a>. The documentation for running triangulation is located here: <a class="github reference external" href="https://github.com/developmentseed/housing-passports/blob/master/COMPILING_FILE_INTO_DB.md">developmentseed/housing-passports</a>.</p>
-<p>The result of the triangulation for Dominica is located here: <code class="docutils literal notranslate"><span class="pre">s3://hp-deliverables-v2/triangulation_deliver_comp_r1_l3/</span></code>. Specifically, the buildings with the predictions attached to them are in <code class="docutils literal notranslate"><span class="pre">s3://hp-deliverables-v2/triangulation_deliver_comp_r1_l3/dominica_buildings.zip</span></code> and the database is in <code class="docutils literal notranslate"><span class="pre">s3://hp-deliverables-v2/triangulation_deliver_comp_r1_l3/dominica_ok.sql.gz</span></code>.</p>
+<p>The documention for preparing the data for traingulation starting from the <code class="docutils literal notranslate"><span class="pre">detection_classification_predictions.csv</span></code> obtained from inference is located here: <a class="github reference external" href="https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/README.md">developmentseed/housing-passports-v2</a>. The documentation for running triangulation is located here: <a class="github reference external" href="https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/COMPILING_FILE_INTO_DB.md">developmentseed/housing-passports-v2</a>.</p>
+<p>The result of the triangulation for Dominica is located here: <code class="docutils literal notranslate"><span class="pre">s3://hp-deliverables-v2/triangulation_results/</span></code>. Specifically, the buildings with the predictions attached to them are in <code class="docutils literal notranslate"><span class="pre">s3://hp-deliverables-v2/triangulation_results/dominica_buildings.geojson</span></code>.</p>
 <p>Here is a look at the triangulation result:
 <img alt="alt text" src="../_images/triangulation_result.png" /></p>
 </section>

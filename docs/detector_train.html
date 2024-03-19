@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Detection Model Training &#8212; Housing Passports v2</title>
+    <title>Detector Training &#8212; Housing Passports v2</title>
   
   
   
@@ -65,7 +65,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="../_static/ds.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Detection Evaluation" href="detector_evaluate.html" />
+    <link rel="next" title="Detector Evaluation" href="detector_evaluate.html" />
     <link rel="prev" title="Housing Passports V2: Dominica." href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -150,8 +150,8 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Detection Model Training</a></li>
-<li class="toctree-l1"><a class="reference internal" href="detector_evaluate.html">Detection Evaluation</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Detector Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="detector_evaluate.html">Detector Evaluation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="classifier_train.html">Classifier Training</a></li>
 <li class="toctree-l1"><a class="reference internal" href="classifier_evaluate.html">Classifier Evaluation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="detect_classify_clip.html">Inference</a></li>
@@ -407,7 +407,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Detection Model Training</h1>
+    <h1>Detector Training</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -442,8 +442,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="detection-model-training">
-<h1>Detection Model Training<a class="headerlink" href="#detection-model-training" title="Permalink to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="detector-training">
+<h1>Detector Training<a class="headerlink" href="#detector-training" title="Permalink to this heading">#</a></h1>
 <p>For this project, we trained a Detectron2 model for object detection using <a class="reference external" href="https://cocodataset.org/#format-data">COCO-formatted</a> datasets.</p>
 <section id="what-is-detectron2">
 <h2>What is Detectron2<a class="headerlink" href="#what-is-detectron2" title="Permalink to this heading">#</a></h2>
@@ -474,7 +474,8 @@ The loss curve for the final detection model.</p>
 <section id="dataset-prep">
 <h2>Dataset prep<a class="headerlink" href="#dataset-prep" title="Permalink to this heading">#</a></h2>
 <p>To train the model, we combined the left and right side images into a single COCO annotation files from <code class="docutils literal notranslate"><span class="pre">s3://hp-deliverables-v2/coco_format_12_4/</span></code>, shuffled the combined annotation file and partitioned that into training, validation and testing splits using a 70 percent, 20 percent and 10 percent ratio, respectively. The results of this were 3 COCO annotation files, one for each partition.</p>
-<p>You can find the partitioned data here: <code class="docutils literal notranslate"><span class="pre">s3://hp-deliverables-v2/partitions/</span></code>.</p>
+<p>The script to reproduce this from the left/right side COCO data in <code class="docutils literal notranslate"><span class="pre">s3://hp-deliverables-v2/coco_format_12_4/project_building_properties_right-coco-1.0.zip</span></code> and <code class="docutils literal notranslate"><span class="pre">s3://hp-deliverables-v2/coco_format_12_4/project_building_properties_left-coco-1.0.zip</span></code> is here: <a class="github reference external" href="https://github.com/developmentseed/housing-passports-v2/blob/main/nbs/create_coco_detector_partitions.ipynb">developmentseed/housing-passports-v2</a></p>
+<p>You can find the already partitioned data here: <code class="docutils literal notranslate"><span class="pre">s3://hp-deliverables-v2/partitions/</span></code>.</p>
 </section>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h2>
@@ -599,7 +600,7 @@ The loss curve for the final detection model.</p>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Detection Evaluation</p>
+        <p class="prev-next-title">Detector Evaluation</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

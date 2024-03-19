@@ -150,8 +150,8 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="detector_train.html">Detection Model Training</a></li>
-<li class="toctree-l1"><a class="reference internal" href="detector_evaluate.html">Detection Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="detector_train.html">Detector Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="detector_evaluate.html">Detector Evaluation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="classifier_train.html">Classifier Training</a></li>
 <li class="toctree-l1"><a class="reference internal" href="classifier_evaluate.html">Classifier Evaluation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="detect_classify_clip.html">Inference</a></li>
@@ -473,11 +473,6 @@ document.write(`
 <span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">patches</span>
 <span class="kn">import</span> <span class="nn">rasterio</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
-<span class="kn">from</span> <span class="nn">src.datamodule</span> <span class="kn">import</span> <span class="n">HouseDataModule</span>
-<span class="kn">from</span> <span class="nn">src.model</span> <span class="kn">import</span> <span class="n">HPClassifier</span>
-<span class="kn">from</span> <span class="nn">detect_clip_classify</span> <span class="kn">import</span> <span class="n">evaluate_classification_model</span><span class="p">,</span> <span class="n">clip_image_around_bbox_buffer</span><span class="p">,</span> <span class="n">load_classification_model</span>
-<span class="kn">from</span> <span class="nn">torchvision.transforms</span> <span class="kn">import</span> <span class="n">Compose</span><span class="p">,</span> <span class="n">Resize</span><span class="p">,</span> <span class="n">ToTensor</span><span class="p">,</span> <span class="n">Normalize</span><span class="p">,</span> <span class="n">ToPILImage</span>
 </pre></div>
 </div>
 </div>
@@ -797,6 +792,16 @@ detectron2: 0.6
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># go to the location of the repo</span>
 <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">model_dir</span><span class="si">}</span><span class="s2">housing-passports-v2/&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">src.datamodule</span> <span class="kn">import</span> <span class="n">HouseDataModule</span>
+<span class="kn">from</span> <span class="nn">src.model</span> <span class="kn">import</span> <span class="n">HPClassifier</span>
+<span class="kn">from</span> <span class="nn">detect_clip_classify</span> <span class="kn">import</span> <span class="n">evaluate_classification_model</span><span class="p">,</span> <span class="n">clip_image_around_bbox_buffer</span><span class="p">,</span> <span class="n">load_classification_model</span>
+<span class="kn">from</span> <span class="nn">torchvision.transforms</span> <span class="kn">import</span> <span class="n">Compose</span><span class="p">,</span> <span class="n">Resize</span><span class="p">,</span> <span class="n">ToTensor</span><span class="p">,</span> <span class="n">Normalize</span><span class="p">,</span> <span class="n">ToPILImage</span>
 </pre></div>
 </div>
 </div>
