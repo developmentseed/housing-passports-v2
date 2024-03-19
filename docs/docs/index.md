@@ -9,7 +9,7 @@ The Housing Passports project entails the systematic collection of high-resoluti
 
 This website serves as documentation for the project code which lives at https://github.com/developmentseed/housing-passports-v2. Please navigate through the pages on the left as needed. The order follows the sequence of the project workflow:
 
-1) Dataset creation: see this labeling guide https://devseed.com/housing-passports-labeling/
+1) Dataset creation: see this labeling guide https://devseed.com/housing-passports-labeling/ and the guide for obtaining data from Mapillary and processing it into left/right side images: https://github.com/developmentseed/housing-passports-v2/blob/main/pre_processing/README.md
 2) Building detection model training
 3) Building detection model evaluation
 4) Building classification model training 
