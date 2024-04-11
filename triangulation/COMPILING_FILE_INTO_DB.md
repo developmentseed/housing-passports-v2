@@ -12,8 +12,8 @@ For optimal performance, it is recommended to use configurations such as xlarge,
 To build the container, run the following command. Everything will be installed within the Docker container.
 
 ```bash
-cd housing-passport/
-docker-container build
+cd triangulation/
+ddocker-compose build
 ```
 
 # 3. Start Database
@@ -21,14 +21,14 @@ docker-container build
 Execute the following command to start up the database:
 
 ```bash
-docker-container up hpdb -d
+ddocker-compose up hpdb -d
 ```
 
 # 4. Launch the development container to interact with the database
 To interact with the database, commence the container by executing the following command:
 
 ```bash
-docker-container run hpdev bash
+ddocker-compose run hpdev bash
 ```
 
 Once inside the container, run the bash script `./db_compilation.sh` This script will create everything required for running the CLI sequentially in order.
@@ -45,7 +45,7 @@ Here are further details and file formats required for the successful execution 
 Specify the trajectory file format using the following parameter:
 
 ```bash
---trajectory-fpath=$inputDir/trajectory.csv 
+[--trajectory-fpath=$inputDir/trajectory.csv ](https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/db_compilation.sh#L27)
 ```
 
 Example CSV format:
@@ -85,7 +85,7 @@ Where:
 Specify the rooftop shapefile format using the following parameter:
 
 ```bash
---geomfile-fpath=$inputDir/dominica_buildings/building_simplified.shp
+[--geomfile-fpath=$inputDir/dominica_buildings/building_simplified.shp](https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/db_compilation.sh#L28)
 ```
 
 Ensure the building footprints metadata includes a `neighborhood` column.
@@ -94,8 +94,8 @@ Ensure the building footprints metadata includes a `neighborhood` column.
 Specify the inference detection file formats using the following parameters:
 
 ```bash
-  --parts-inference-fpath=$inputDir/parts_inference_file.json
-  --props-inference-fpath=$inputDir/props_inference_file.json
+  [--parts-inference-fpath=$inputDir/parts_inference_file.json](https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/db_compilation.sh#L29)
+  [--props-inference-fpath=$inputDir/props_inference_file.json](https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/db_compilation.sh#L30)
 ```
 
 Example JSON format:
@@ -184,7 +184,7 @@ Ensure image filenames are formatted appropriately.
 #### Building Parts PBtxt Format
 Specify the building parts PBtxt format using the following parameter:
 ```bash
-  --parts-map-fpath=$inputDir/parts_map_file.pbtxt
+  [--parts-map-fpath=$inputDir/parts_map_file.pbtxt](https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/db_compilation.sh#L31)
 ```
 
 Example PBtxt format:
@@ -203,7 +203,7 @@ item {
 #### Building Properties PBtxt Format
 Specify the building properties PBtxt format using the following parameter:
 ```bash
-  --props-map-fpath=$inputDir/props_map_file.pbtxt
+  [--props-map-fpath=$inputDir/props_map_file.pbtxt](https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/db_compilation.sh#L32)
 ```
 
 Example PBtxt format:
@@ -223,8 +223,8 @@ item {
 
 Specify the filter format for distilling detections using the following parameters:
 ```bash
---fpath-property-groups=$inputDir/properties_key.json
---fpath-parts=$inputDir/parts_key.json
+[--fpath-property-groups=$inputDir/properties_key.json](https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/db_compilation.sh#L58)
+[--fpath-parts=$inputDir/parts_key.json](https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/db_compilation.sh#L57)
 ```
 
 Example filter format:
