@@ -7,14 +7,6 @@ The following packages are open-source:
 - [geokit](https://github.com/developmentseed/geokit): A utility written in various languages containing a collection of versatile scripts.
 - [spherical2images](https://github.com/developmentseed/spherical2images): A package designed to extract sides of a 360-degree image.
 
-## Docker Images
-
-We constructed images for each package using:
-
-```shell
-
-docker-compose build
-```
 
 ## Running Bash
 
