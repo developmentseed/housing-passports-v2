@@ -1,4 +1,4 @@
-# Housing Passport - Triangulation Algorithm
+# Processing files to attach predictions to building footprints
 
 This documentation guides you through the process of inserting essential data, including buildings, images, and detections, into the Housing Passport database. Follow these steps for seamless integration and efficient management of data.
 
