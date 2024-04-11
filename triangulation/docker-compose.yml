@@ -14,8 +14,8 @@ services:
       POSTGRES_PASSWORD: '1234'
       SET_SERVER_CONFING: 'true'
       MACHINE_TYPE: 'xlarge'
-    # volumes:
-    #   - ./postgres-data:/var/lib/postgresql/data
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
   hpdev:
     image: developmentseed/hpdev:v1
     build:
@@ -25,24 +25,3 @@ services:
         - ./:/mnt/data
         - ./../../Downloads/:/host_files
         - ~/.aws:/root/.aws
-  hpnb:
-    image: developmentseed/hpnotebook:v1
-    build:
-      context: ./dockerNotebook
-      dockerfile: Dockerfile
-    ports:
-      - "8888:8888"
-    volumes:
-        - ./:/opt/src
-        - ./:/opt/jupyter
-        - ./model_evaluation/notebooks:/opt/jupyter/notebooks
-        # - ./../../Downloads/:/host_files
-  tfs_properties:
-    image: developmentseed/building_properties:v1
-    ports:
-      - "8501:8501"
-  tfs_parts:
-    image: developmentseed/building_parts:v1
-    ports:
-      - "8502:8501"
-        
