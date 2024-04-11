@@ -1,17 +1,22 @@
-#  Housing Passports pre processing
-To prepare the data, we utilized two packages.
+#  Housing Passports data pre-processing
 
-## Packages
-The following packages are open-source:
+Data preprocessing is the process of getting images from Mapillary and clipping the 360 images into a format that we are going to label in CVAT and use for inferences too.
 
-- [geokit](https://github.com/developmentseed/geokit): A utility written in various languages containing a collection of versatile scripts.
-- [spherical2images](https://github.com/developmentseed/spherical2images): A package designed to extract sides of a 360-degree image.
+## Packages that we usse for processing the data
+
+The following packages are open-source develop by devseed data team.
+
+- [geokit](https://github.com/developmentseed/geokit): A utility written in various languages containing a collection of versatile scripts., download the images 
+
+- [spherical2images](https://github.com/developmentseed/spherical2images): A package designed to extract sides of a 360-degree image. to process that data
 
 
 ## Running Bash
 
-```shell
+The `pre_processing.sh` script contains all the necessary steps to download, process, and clip the images.
 
+```shell
+cd pre-processing/
 bash pre_processing.sh
 ```
 
@@ -49,9 +54,3 @@ $spherical2imagesdocker clip_mapillary_pano \
 ## coco format
 The annotation process was conducted using the [CVAT](https://github.com/opencv/cvat) tool from OpenCV. This tool 
 provides the option to download data in various formats, one of which is [COCO format](https://opencv.github.io/cvat/docs/manual/advanced/formats/format-coco/).
-
-
-
-
-
-
