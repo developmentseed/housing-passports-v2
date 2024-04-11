@@ -2,7 +2,13 @@
 
 This documentation guides you through the process of inserting essential data, including buildings, images, and detections, into the Housing Passport database. Follow these steps for seamless integration and efficient management of data.
 
-## 1. Build the container
+# 1. Hardware requirements
+
+For optimal performance, it is recommended to use configurations such as xlarge, 2xlarge, or 4xlarge. Due to the resource-intensive nature of database processing, we have developed a script to customize the database container, enhancing the processing speed for a more efficient operation. The script, [server_config.sh](dockerPG/config/server_config.sh), will be executed automatically once you start up the DB container with the environment variable: MACHINE_TYPE: 'xlarge'.
+
+
+
+# 2. Build the container
 To build the container, run the following command. Everything will be installed within the Docker container.
 
 ```bash
@@ -10,7 +16,7 @@ cd housing-passport/
 docker-container build
 ```
 
-## 2. Dump Data into Database
+# 3. Start Database
 
 Execute the following command to start up the database:
 
@@ -18,7 +24,7 @@ Execute the following command to start up the database:
 docker-container up hpdb -d
 ```
 
-## 3. Launch the development container to interact with the database
+# 4. Launch the development container to interact with the database
 To interact with the database, commence the container by executing the following command:
 
 ```bash
@@ -27,7 +33,7 @@ docker-container run hpdev bash
 
 Once inside the container, run the bash script `./db_compilation.sh` This script will create everything required for running the CLI sequentially in order.
 
-Before running the script, ensure that you update the S3 bucket location to fetch the necessary files, and also results will be uploaded to the same bucket.
+Before running the script, ensure that you update the S3 bucket location to fetch the necessary files. Also, the results will be uploaded to the same S3 bucket that you configured.
 
 ## Additional Details and File Formats
 
@@ -39,7 +45,7 @@ Here are further details and file formats required for the successful execution 
 Specify the trajectory file format using the following parameter:
 
 ```bash
---trajectory-fpath=<path_to>/trajectory/padang.csv
+--trajectory-fpath=$inputDir/trajectory.csv 
 ```
 
 Example CSV format:
@@ -50,7 +56,7 @@ heading[deg],image_fname,frame,latitude[deg],longitude[deg],cam,neighborhood,sub
 ...
 ```
 - Dominica:
-```
+```csv
 heading[deg],image_fname,frame,latitude[deg],longitude[deg],cam,neighborhood,subfolder
 157.99,1217711312238013_right.jpg,1217711312238013_right,15.58436914933641,-61.463109254837036,1,n,data/mapillary_images_new/SG4gUpQDdl1HvxCkMzErFq/right
 84.05,810147150770972_right.jpg,810147150770972_right,15.58661170189599,-61.46408021450043,1,n,data/mapillary_images_new/SG4gUpQDdl1HvxCkMzErFq/right
@@ -64,27 +70,36 @@ heading[deg],image_fname,frame,latitude[deg],longitude[deg],cam,neighborhood,sub
 ```
 
 Where: 
-```
-heading[deg]: Compass angle
-```
+
+- **heading[deg]** Compass angle
+- **image_fname** image name
+- **frame** Image name without extension
+- **latitude[deg]** Latitude (WGS84)
+- **longitude[deg]** Longitud (WGS84)
+- **cam** Camara position, 1=right and 3=left 
+- **neighborhood** neighborhood clasification
+- **subfolder** path to the images
+
 
 #### Rooftop Shapefile Format
 Specify the rooftop shapefile format using the following parameter:
 
 ```bash
---geomfile-fpath=<path_to>/rooftop/padang.shp
+--geomfile-fpath=$inputDir/dominica_buildings/building_simplified.shp
 ```
 
 Ensure the building footprints metadata includes a `neighborhood` column.
 
 #### Inference Detection File Format
 Specify the inference detection file formats using the following parameters:
+
 ```bash
---props-inference-fpath=<path_to>/prediction/prediction_filtered_properties.json
---parts-inference-fpath=<path_to>/prediction/prediction_filtered_parts.json
+  --parts-inference-fpath=$inputDir/parts_inference_file.json
+  --props-inference-fpath=$inputDir/props_inference_file.json
 ```
 
 Example JSON format:
+
 ```json
 [  
   {
@@ -169,7 +184,7 @@ Ensure image filenames are formatted appropriately.
 #### Building Parts PBtxt Format
 Specify the building parts PBtxt format using the following parameter:
 ```bash
---parts-map-fpath=<path_to>/labels/building_parts.pbtxt
+  --parts-map-fpath=$inputDir/parts_map_file.pbtxt
 ```
 
 Example PBtxt format:
@@ -188,7 +203,7 @@ item {
 #### Building Properties PBtxt Format
 Specify the building properties PBtxt format using the following parameter:
 ```bash
---props-map-fpath=<path_to>/labels/building_properties.pbtxt
+  --props-map-fpath=$inputDir/props_map_file.pbtxt
 ```
 
 Example PBtxt format:
@@ -208,8 +223,8 @@ item {
 
 Specify the filter format for distilling detections using the following parameters:
 ```bash
---fpath-parts=<path_to>/labels/building_parts_list.json
---fpath-property-groups=<path_to>/labels/building_properties_categorized.json
+--fpath-property-groups=$inputDir/properties_key.json
+--fpath-parts=$inputDir/parts_key.json
 ```
 
 Example filter format:
@@ -263,6 +278,8 @@ Example filter format:
 These detailed instructions and file formats ensure a smooth insertion of relevant information into the Housing Passport database, enhancing the overall efficiency of data management and retrieval.
 
 
-## Hardware requirements:
 
-For optimal performance, it is recommended to use configurations such as xlarge, 2xlarge, or 4xlarge. Due to the resource-intensive nature of database processing, we have developed a script to customize the database container, enhancing the processing speed for a more efficient operation. The script, [server_config.sh](dockerPG/config/server_config.sh), will be executed automatically once you start up the DB container with the environment variable: MACHINE_TYPE: 'xlarge'.
+
+# 5. Run the triangulation script
+
+The script contains all the configuration to run the triangulation, so you don't need to do it manually. You just need to execute the script `./db_compilation.sh` under the `hpdev` container.
