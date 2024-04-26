@@ -3,7 +3,7 @@ outputDir=data
 mkdir -p $outputDir
 mkdir -p ${outputDir}/images_new
 
-geokitdocker="docker run --rm -v ${PWD}:/mnt/data/  -e MAPILLARY_ACCESS_TOKEN=${MAPILLARY_ACCESS_TOKEN} -it developmentseed/geokit:python.latest mapillary"
+geokitdocker="docker run --rm -v ${PWD}:/mnt/data/  -e MAPILLARY_ACCESS_TOKEN=${MAPILLARY_ACCESS_TOKEN} -it developmentseed/geokit:python.develop mapillary"
 spherical2imagesdocker="docker run -v $PWD:/mnt/ -e MAPILLARY_ACCESS_TOKEN=$MAPILLARY_ACCESS_TOKEN -it developmentseed/spherical2images:v1"
 
 
