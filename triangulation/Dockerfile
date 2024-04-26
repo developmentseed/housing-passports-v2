@@ -35,5 +35,4 @@ COPY setup.py /build/
 RUN python setup.py install
 
 # Set up working directory
-RUN mkdir /host_files
 WORKDIR /mnt/data

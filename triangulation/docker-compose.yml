@@ -23,5 +23,4 @@ services:
       dockerfile: Dockerfile
     volumes:
         - ./:/mnt/data
-        - ./../../Downloads/:/host_files
         - ~/.aws:/root/.aws
