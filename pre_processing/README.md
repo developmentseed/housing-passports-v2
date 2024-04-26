@@ -10,6 +10,17 @@ The following packages are open-source develop by devseed data team.
 
 - [spherical2images](https://github.com/developmentseed/spherical2images): A package designed to extract sides of a 360-degree image. to process that data
 
+## requirements
+
+- export **MAPILLARY_ACCESS_TOKEN**, you need to export your previously created `access_token` from your mapillary account [mapillary/developers](https://www.mapillary.com/dashboard/developers)
+
+```shell
+export MAPILLARY_ACCESS_TOKEN="MLY|..."
+```
+
+
+- Docker image **developmentseed/spherical2images:v1**, this image is built from the package [spherical2images](https://github.com/developmentseed/spherical2images/tree/caribbean_HR)
+
 
 ## Running Bash
 
