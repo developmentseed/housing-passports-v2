@@ -44,9 +44,9 @@ Here are further details and file formats required for the successful execution 
 #### Trajectory File Format
 Specify the trajectory file format using the following parameter:
 
-```bash
-[--trajectory-fpath=$inputDir/trajectory.csv ](https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/db_compilation.sh#L27)
-```
+
+- [--trajectory-fpath=$inputDir/trajectory.csv ](https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/db_compilation.sh#L27)
+
 
 Example CSV format:
 - Padang:
@@ -84,19 +84,19 @@ Where:
 #### Rooftop Shapefile Format
 Specify the rooftop shapefile format using the following parameter:
 
-```bash
-[--geomfile-fpath=$inputDir/dominica_buildings/building_simplified.shp](https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/db_compilation.sh#L28)
-```
+
+- [--geomfile-fpath=$inputDir/dominica_buildings/building_simplified.shp](https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/db_compilation.sh#L28)
+
 
 Ensure the building footprints metadata includes a `neighborhood` column.
 
 #### Inference Detection File Format
 Specify the inference detection file formats using the following parameters:
 
-```bash
-  [--parts-inference-fpath=$inputDir/parts_inference_file.json](https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/db_compilation.sh#L29)
-  [--props-inference-fpath=$inputDir/props_inference_file.json](https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/db_compilation.sh#L30)
-```
+
+- [--parts-inference-fpath=$inputDir/parts_inference_file.json](https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/db_compilation.sh#L29)
+- [--props-inference-fpath=$inputDir/props_inference_file.json](https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/db_compilation.sh#L30)
+
 
 Example JSON format:
 
@@ -183,9 +183,9 @@ Ensure image filenames are formatted appropriately.
 
 #### Building Parts PBtxt Format
 Specify the building parts PBtxt format using the following parameter:
-```bash
-  [--parts-map-fpath=$inputDir/parts_map_file.pbtxt](https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/db_compilation.sh#L31)
-```
+
+- [--parts-map-fpath=$inputDir/parts_map_file.pbtxt](https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/db_compilation.sh#L31)
+
 
 Example PBtxt format:
 ```protobuf
@@ -202,9 +202,9 @@ item {
 
 #### Building Properties PBtxt Format
 Specify the building properties PBtxt format using the following parameter:
-```bash
-  [--props-map-fpath=$inputDir/props_map_file.pbtxt](https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/db_compilation.sh#L32)
-```
+
+- [--props-map-fpath=$inputDir/props_map_file.pbtxt](https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/db_compilation.sh#L32)
+
 
 Example PBtxt format:
 ```protobuf
@@ -222,10 +222,10 @@ item {
 ### Filter Format for Distill Detections
 
 Specify the filter format for distilling detections using the following parameters:
-```bash
-[--fpath-property-groups=$inputDir/properties_key.json](https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/db_compilation.sh#L58)
-[--fpath-parts=$inputDir/parts_key.json](https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/db_compilation.sh#L57)
-```
+
+- [--fpath-property-groups=$inputDir/properties_key.json](https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/db_compilation.sh#L58)
+- [--fpath-parts=$inputDir/parts_key.json](https://github.com/developmentseed/housing-passports-v2/blob/main/triangulation/db_compilation.sh#L57)
+
 
 Example filter format:
 ```json
