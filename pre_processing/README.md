@@ -62,6 +62,38 @@ $spherical2imagesdocker clip_mapillary_pano \
   --cube_sides=right,left
 ```
 
+### Windows Powershell-compatible solution
+
+These steps can be used to run the pre-processing workflow with Windows Powershell.
+
+```
+$outputDir="data"
+$MAPILLARY_ACCESS_TOKEN="myaccesstoken"
+mkdir -p $outputDir
+mkdir -p ${outputDir}/images_new
+
+docker run --rm -v ${PWD}:/mnt/data/  `
+    -e MAPILLARY_ACCESS_TOKEN="${MAPILLARY_ACCESS_TOKEN}" `
+    -it jeanpommier/devseed-geokit:python.latest mapillary `
+   get_mapillary_points `
+      --input_aoi=-61.493225,15.204024,-61.232986,15.642874 `
+      --organization_ids=276431331814934 `
+      --timestamp_from=1672531200000 `
+      --only_pano `
+      --output_file_point=${outputDir}/mapillary_points_panoramic__pano.geojson `
+      --output_file_sequence=${outputDir}/mapillary_sequences_panoramic__pano.geojson
+
+docker run -v ${PWD}:/mnt/  `
+    -e MAPILLARY_ACCESS_TOKEN="${MAPILLARY_ACCESS_TOKEN}" `
+    -it jeanpommier/devseed-spherical2images:v1 `
+   clip_mapillary_pano `
+      --input_file_points=${outputDir}/mapillary_points_panoramic__pano__pano.geojson `
+      --image_clip_size=1024 `
+      --output_file_points=${outputDir}/mapillary_points_panoramic_process_new.geojson `
+      --output_images_path=${outputDir}/images_new `
+      --cube_sides=right,left
+```
+
 ## coco format
 The annotation process was conducted using the [CVAT](https://github.com/opencv/cvat) tool from OpenCV. This tool 
 provides the option to download data in various formats, one of which is [COCO format](https://opencv.github.io/cvat/docs/manual/advanced/formats/format-coco/).
